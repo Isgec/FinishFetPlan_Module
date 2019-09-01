@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<act_window
+id="FinishFetPlanModule_ItemPlanTable_action"
+name="Item Plan Detail"
+res_model="finishfetplanmodule.itemplantable" />
+<menuitem
+ id="finishfetplanmodule_ItemPlanTable_menu"
+ name="Item Plan Detail"
+ action="FinishFetPlanModule_ItemPlanTable_action"
+ parent="FinishFetPlanModule_mainmenu"
+ sequence="3" />
+
+<record id ="finishfetplanmodule_ItemPlanTable_view_form" model="ir.ui.view">
+   <field name="name">Application Table Name Form</field>
+   <field name="model">finishfetplanmodule.itemplantable</field>
+   <field name="arch" type="xml">
+         <form>
+               <sheet>
+
+                    <group col="4">
+                       <field name="name"/>
+                       <field name="date"/>
+                       <field name="jobrouting_id" options="{'no_open':True,'no_create':1,'no_create_edit':1}"/>
+                    </group>
+                   <group col="6">
+                       <field name="shift_a"/>
+                       <field name="shift_b"/>
+                       <field name="shift_c"/>
+                   </group>
+                   <group col="6">
+                       <field name="error_log_a"/>
+                       <field name="error_log_b"/>
+                       <field name="error_log_c"/>
+                    </group>
+                    <group col="4">
+                       <field name="lag_days"/>
+                    </group>
+
+               </sheet>
+	    </form>
+   </field>
+</record>
+
+<record id="finsihfetplanmodule_ItemPlanTable_view_tree" model="ir.ui.view">
+  <field name="name">Application Table Name List</field>
+  <field name="model">finishfetplanmodule.itemplantable</field>
+  <field name="arch" type="xml">
+    <tree>
+        <field name="jobrouting_id"/>
+        <field name="date"/>
+        <field name="shift_a"/>
+        <field name="shift_b"/>
+        <field name="shift_c"/>
+        <field name="error_log_a" />
+        <field name="error_log_b"/>
+        <field name="error_log_c"/>
+    </tree>
+    </field>
+</record>
+
+
+</odoo>

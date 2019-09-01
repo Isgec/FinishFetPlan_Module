@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<act_window
+id="FinishFetPlanModule_ManpowerTable_action"
+name="Man Power Data "
+res_model="finishfetplanmodule.manpowertable" />
+<menuitem
+ id="finishfetplanmodule_ManpowerTable_menu"
+ name="Man Power"
+ action="FinishFetPlanModule_ManpowerTable_action"
+ parent="FinishFetPlanModule_mainmenu"
+ sequence="2" />
+
+<record id ="finishfetplanmodule_ManpowerTable_view_form" model="ir.ui.view">
+   <field name="name">Application Table Name Form</field>
+   <field name="model">finishfetplanmodule.manpowertable</field>
+   <field name="arch" type="xml">
+         <form>
+               <sheet>
+                   <group col="4">
+                       <field name="name"/>
+                       <field name="jobrouting_id" options="{'no_open':True,'no_create':1,'no_create_edit':1}"/>
+                   </group>
+                   <group col="6">
+                       <field name="shift_a"/>
+                       <field name="shift_b"/>
+                       <field name="shift_c"/>
+                   </group>
+               </sheet>
+	    </form>
+   </field>
+</record>
+
+<record id="finsihfetplanmodule_ManpowerTable_view_tree" model="ir.ui.view">
+  <field name="name">Application Table Name List</field>
+  <field name="model">finishfetplanmodule.manpowertable</field>
+  <field name="arch" type="xml">
+    <tree>
+        <field name="name"/>
+        <field name="shift_a"/>
+        <field name="shift_b"/>
+        <field name="shift_c"/>
+        <field name="jobrouting_id"/>
+    </tree>
+    </field>
+</record>
+
+
+</odoo>
