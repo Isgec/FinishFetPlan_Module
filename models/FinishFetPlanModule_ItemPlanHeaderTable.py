@@ -20,7 +20,6 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
             if record:
                 record.date = self.plan_date + timedelta(days=record.lag_days)
 
-
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
         fillGOUGING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
@@ -81,8 +80,6 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
                         setcol4.fill = colorfill
                         if thisitem.error_log_c == 'Conflicts with other plan C':
                             thisitem.error_log_c = ''
-
-
 
         fp = io.BytesIO()
         wb.save(fp)

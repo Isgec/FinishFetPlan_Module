@@ -2,11 +2,11 @@
 <odoo>
 <act_window
 id="FinishFetPlanModule_ManpowerTable_action"
-name="Man Power Data "
+name="Manpower Availability "
 res_model="finishfetplanmodule.manpowertable" />
 <menuitem
  id="finishfetplanmodule_ManpowerTable_menu"
- name="Man Power"
+ name="Manpower"
  action="FinishFetPlanModule_ManpowerTable_action"
  parent="FinishFetPlanModule_mainmenu"
  sequence="2" />

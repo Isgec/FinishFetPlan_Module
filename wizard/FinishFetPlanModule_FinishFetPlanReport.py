@@ -21,6 +21,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         worksheet = wb.active
         filename = 'FinishFetplan.xlsx'
         reportname = "FinishFetPlan:"
+        self.name = 'Finish Fet Plan Report as on: ' + str(self.from_dt)
 
         itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
         itemheader_ids = itemheader_obj.search([(1, '=', 1)])
@@ -195,7 +196,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         else:
                             setcol4.value = thisitem.shift_c
 
-
+        wb.active = 0
+        worksheet = wb.active
         fp = io.BytesIO()
         wb.save(fp)
         out = base64.encodestring(fp.getvalue())

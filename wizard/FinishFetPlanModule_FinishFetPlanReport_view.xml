@@ -7,7 +7,7 @@ name="Generate Finish Fet Plan Report"
 res_model="finishfetplanmodule.finishfetplanreport" />
 	<menuitem
             id="finishfetplanmodule_finishfetplanreport_menu"
-            name="Genrate Report"
+            name="Genrate Complete Excel"
             action="finishfetplanmodule_finishfetplanreport_export"
             parent="FinishFetPlanModule_mainmenu"
             sequence="5" />
