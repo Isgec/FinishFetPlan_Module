@@ -20,11 +20,20 @@ res_model="finishfetplanmodule.finishfetplanreport" />
             <field name="arch" type="xml">
                 <form string="Dashboard">
 					<sheet>
-					<group col="4">
+					<group col="3">
 							<field name="from_dt"/>
 							<button name="button_excel" string=" Genrate Report" type="object" class="oe_highlight"  />
-							<button string="Cancel" class="oe_link" special="cancel" />
-						</group>
+
+					</group>
+				<br /><br /><br />	<group col="3">
+							<field name="upload_file"/>
+							<button name="upload_excel" string=" Upload Report" type="object" class="oe_highlight"  />
+
+					</group>
+					<group col="2">
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</group>
+
 					</sheet>
                  </form>
             </field>
