@@ -1,20 +1,33 @@
+from odoo import models, fields
 import io
 import base64
 import openpyxl
 from os import path
 from openpyxl.styles import PatternFill
-from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.exceptions import UserError, ValidationError
+from tempfile import TemporaryFile
 
 class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
     _name = 'finishfetplanmodule.finishfetplanreport'
     from_dt = fields.Date('From Date ', required=True)
     name = fields.Char('Report Name')
     upload_file = fields.Binary(string="Upload File")
+    uploadedfilename = fields.Char('File Name', size=256, default='Chose File')
+    readfromexcel = fields.Text('Sample Read')
 
-    def upload_excel(self):
-        if self.upload_file != '':
-            raise ValidationError(_("File is Find"))
+    def upload_excel(self, data, context=None):
+        # Generating of the excel file to be read by openpyxl
+        file = base64.decodestring(self.upload_file)
+        excel_fileobj = TemporaryFile('wb+')
+        excel_fileobj.write(file)
+        excel_fileobj.seek(0)
+
+        # Create workbook
+        wb = openpyxl.load_workbook(excel_fileobj, data_only=True)
+        wb.active = 0
+        worksheet = wb.active
+        # Read row 1 Col 1 to validate Excel File
+        getcol = worksheet.cell(row=1, column=1)
+        self.readfromexcel = getcol.value
 
     def button_excel(self, data, context=None):
         fillGRINDING =PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
@@ -27,6 +40,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         filename = 'FinishFetplan.xlsx'
         reportname = "FinishFetPlan:"
         self.name = 'Finish Fet Plan Report as on: ' + str(self.from_dt)
+
 
         itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
         itemheader_ids = itemheader_obj.search([(1, '=', 1)])
@@ -111,7 +125,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 if thisitem.jobrouting_id.name == 'WELDING':
                     row = 5
                     if thisitem.shift_a > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = welding_shift_a
                         setcol2 = worksheet.cell(row=row, column=col)
                         if setcol2.value:
@@ -121,17 +135,17 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     col = col + 1
 
                     if thisitem.shift_b > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = welding_shift_b
                         setcol3 = worksheet.cell(row=row, column=col)
                         if setcol3.value:
-                            setcol3.value = setcol3.value + thisitem.shift_b or ''
+                            setcol3.value =  setcol3.value + thisitem.shift_b or ''
                         else:
                             setcol3.value = thisitem.shift_b or ''
                     col = col + 1
 
                     if thisitem.shift_c > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = welding_shift_c
                         setcol4 = worksheet.cell(row=row, column=col)
                         if setcol4.value:
@@ -142,7 +156,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 if thisitem.jobrouting_id.name == 'GRINDING':
                     row = 8
                     if thisitem.shift_a > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = grinding_shift_a
                         setcol2 = worksheet.cell(row=row, column=col)
                         if setcol2.value:
@@ -152,17 +166,17 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     col = col + 1
 
                     if thisitem.shift_b > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = grinding_shift_b
                         setcol3 = worksheet.cell(row=row, column=col)
                         if setcol3.value:
-                            setcol3.value = setcol3.value + thisitem.shift_b or ''
+                            setcol3.value =  setcol3.value + thisitem.shift_b or ''
                         else:
                             setcol3.value = thisitem.shift_b or ''
                     col = col + 1
 
                     if thisitem.shift_c > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = grinding_shift_c
                         setcol4 = worksheet.cell(row=row, column=col)
                         if setcol4.value:
@@ -173,7 +187,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 if thisitem.jobrouting_id.name == 'Gouging':
                     row = 11
                     if thisitem.shift_a > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = gouging_shift_a
                         setcol2 = worksheet.cell(row=row, column=col)
                         if setcol2.value:
@@ -183,7 +197,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     col = col + 1
 
                     if thisitem.shift_b > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = gouging_shift_b
                         setcol3 = worksheet.cell(row=row, column=col)
                         if setcol3.value:
@@ -193,7 +207,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     col = col + 1
 
                     if thisitem.shift_c > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
+                        setcol = worksheet.cell(row=row-1, column=col)
                         setcol.value = gouging_shift_c
                         setcol4 = worksheet.cell(row=row, column=col)
                         if setcol4.value:
@@ -217,7 +231,6 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-
 
 
 class view_ffpreport(models.TransientModel):

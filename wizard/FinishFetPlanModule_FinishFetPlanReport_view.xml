@@ -5,13 +5,13 @@
 id="finishfetplanmodule_finishfetplanreport_export"
 name="Generate Finish Fet Plan Report"
 res_model="finishfetplanmodule.finishfetplanreport" />
+
 	<menuitem
             id="finishfetplanmodule_finishfetplanreport_menu"
             name="Genrate Complete Excel"
             action="finishfetplanmodule_finishfetplanreport_export"
             parent="FinishFetPlanModule_mainmenu"
             sequence="5" />
-
     	<!--Export Form & Action -->
 
         <record id="view_finishfetplanmodule_finishfetplanreport" model="ir.ui.view">
@@ -26,8 +26,10 @@ res_model="finishfetplanmodule.finishfetplanreport" />
 
 					</group>
 				<br /><br /><br />	<group col="3">
-							<field name="upload_file"/>
-							<button name="upload_excel" string=" Upload Report" type="object" class="oe_highlight"  />
+							<field name="upload_file" filename="uploadedfilename"/>
+							<field name="uploadedfilename" invisible="1"/>
+							<button name="upload_excel" string=" Upldate Plan" type="object" class="oe_highlight"  />
+							<field name="readfromexcel" />
 
 					</group>
 					<group col="2">
@@ -54,6 +56,5 @@ res_model="finishfetplanmodule.finishfetplanreport" />
 				</form>
 			</field>
 		</record>
-
 </odoo>
 
