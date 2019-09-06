@@ -5,7 +5,6 @@
 id="finishfetplanmodule_finishfetplanreport_export"
 name="Generate Finish Fet Plan Report"
 res_model="finishfetplanmodule.finishfetplanreport" />
-
 	<menuitem
             id="finishfetplanmodule_finishfetplanreport_menu"
             name="Genrate Complete Excel"
@@ -30,7 +29,6 @@ res_model="finishfetplanmodule.finishfetplanreport" />
 							<field name="uploadedfilename" invisible="1"/>
 							<button name="upload_excel" string=" Upldate Plan" type="object" class="oe_highlight"  />
 							<field name="readfromexcel" />
-
 					</group>
 					<group col="2">
 						<button string="Cancel" class="oe_link" special="cancel" />
@@ -40,7 +38,6 @@ res_model="finishfetplanmodule.finishfetplanreport" />
                  </form>
             </field>
         </record>
-
         <record id="excel_finishfetplanmodule_finishfetplanreport" model="ir.ui.view">
 			<field name="name">view.ffpreport</field>
 			<field name="model">view.ffpreport</field>
