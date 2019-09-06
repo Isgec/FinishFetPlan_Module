@@ -68,7 +68,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
-                getcol = worksheet.cell(row=itempos, column=i)
+                getcol = worksheet.cell(row=itempos, column=i + 1)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
 
@@ -89,7 +89,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
-                getcol = worksheet.cell(row=itempos, column=i)
+                getcol = worksheet.cell(row=itempos, column=i + 2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
 

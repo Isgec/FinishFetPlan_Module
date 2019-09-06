@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--<act_window-->
-<!--id="FinishFetPlanModule_ItemPlanTable_action"-->
-<!--name="Item Plan Detail"-->
-<!--res_model="finishfetplanmodule.itemplantable" />-->
-<!--<menuitem-->
-<!-- id="finishfetplanmodule_ItemPlanTable_menu"-->
-<!-- name="Item Plan Detail"-->
-<!-- action="FinishFetPlanModule_ItemPlanTable_action"-->
-<!-- parent="FinishFetPlanModule_mainmenu"-->
-<!-- sequence="3" />-->
+<act_window
+id="FinishFetPlanModule_ItemPlanTable_action"
+name="Item Plan Detail"
+res_model="finishfetplanmodule.itemplantable" />
+<menuitem
+ id="finishfetplanmodule_ItemPlanTable_menu"
+ name="Item Plan Detail"
+ action="FinishFetPlanModule_ItemPlanTable_action"
+ parent="FinishFetPlanModule_mainmenu"
+ sequence="3" />
 
 <record id ="finishfetplanmodule_ItemPlanTable_view_form" model="ir.ui.view">
    <field name="name">Application Table Name Form</field>
