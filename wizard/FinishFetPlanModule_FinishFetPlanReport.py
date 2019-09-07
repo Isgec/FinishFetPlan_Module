@@ -10,11 +10,14 @@ from tempfile import TemporaryFile
 
 class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
     _name = 'finishfetplanmodule.finishfetplanreport'
-    from_dt = fields.Date('From Date ', required=True)
-    name = fields.Char('Report Name')
-    upload_file = fields.Binary(string="Upload File")
-    uploadedfilename = fields.Char('File Name', size=256, default='Chose File')
-    readfromexcel = fields.Text('Sample Read')
+    from_dt = fields.Date('Step 1: Select Date for which to Generate Plan ', required=True)
+    name = fields.Char('Finish Fet Excel Sheet')
+    upload_file = fields.Binary(string="Step 4: Upload Revised Plan")
+    uploadedfilename = fields.Char('File Name', size=256, default='Select Revised Plan')
+    readfromexcel = fields.Text('Final Step')
+    download_file = fields.Binary(string="Step 3: Download Generated Plan and Review the Load")
+    downloadedfilename = fields.Char('File Name', size=256, default='Download Generated Plan ')
+
 
     def upload_excel(self, data, context=None):
         # Generating of the excel file to be read by openpyxl
@@ -30,7 +33,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
-        self.readfromexcel = 'Start:'
+        self.readfromexcel = ''
         itempos = 14
         relativedate = 0
         my_max_col = 120
@@ -111,6 +114,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
+        self.readfromexcel = 'Step 6: You may Regenerate the Plan to review the Impact on Load, or SAVE and data for future reference'
 
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
@@ -302,22 +306,23 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         fp = io.BytesIO()
         wb.save(fp)
         out = base64.encodestring(fp.getvalue())
-        view_ffpreport_id = self.env['view.ffpreport'].create(
-            {'name': reportname, 'file_name': filename, 'datas_fname': out})
-        return {
-            'res_id': view_ffpreport_id.id,
-            'name': 'Finish Fet Plan Report',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'view.ffpreport',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-        }
+        self.download_file = out
+        # view_ffpreport_id = self.env['view.ffpreport'].create(
+        #     {'name': reportname, 'file_name': filename, 'datas_fname': out})
+        # return {
+        #     'res_id': view_ffpreport_id.id,
+        #     'name': 'Finish Fet Plan Report',
+        #     'view_type': 'form',
+        #     'view_mode': 'form',
+        #     'res_model': 'view.ffpreport',
+        #     'view_id': False,
+        #     'type': 'ir.actions.act_window',
+        # }
 
 
 class view_ffpreport(models.TransientModel):
     _name = 'view.ffpreport'
-    _rec_name = 'datas_fname'
+    _rec_name = 'file_name'
     name = fields.Char('Report Name', size=256)
     file_name = fields.Char('File Name', size=256)
     datas_fname = fields.Binary('Report')

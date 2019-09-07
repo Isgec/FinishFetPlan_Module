@@ -3,14 +3,14 @@
 <odoo>
 <act_window
 id="finishfetplanmodule_finishfetplanreport_export"
-name="Generate Finish Fet Plan Report"
+name="Generate Finish Fet Plan"
 res_model="finishfetplanmodule.finishfetplanreport" />
 	<menuitem
             id="finishfetplanmodule_finishfetplanreport_menu"
-            name="Genrate Complete Excel"
+            name="Generate Excel Sheet"
             action="finishfetplanmodule_finishfetplanreport_export"
             parent="FinishFetPlanModule_mainmenu"
-            sequence="5" />
+            sequence="10" />
     	<!--Export Form & Action -->
 
         <record id="view_finishfetplanmodule_finishfetplanreport" model="ir.ui.view">
@@ -21,13 +21,15 @@ res_model="finishfetplanmodule.finishfetplanreport" />
 					<sheet>
 					<group col="3">
 							<field name="from_dt"/>
-							<button name="button_excel" string=" Genrate Report" type="object" class="oe_highlight"  />
+							<button name="button_excel" string=" Step 2: Click here to Generate Plan in Excel" type="object" class="oe_highlight"  />
+							<field name="download_file" filename="downloadedfilename" readonly="True" />
+							<field name="downloadedfilename" invisible="1" readonly="True"/>
 
 					</group>
 				<br /><br /><br />	<group col="3">
 							<field name="upload_file" filename="uploadedfilename"/>
 							<field name="uploadedfilename" invisible="1"/>
-							<button name="upload_excel" string=" Upldate Plan" type="object" class="oe_highlight"  />
+							<button name="upload_excel" string="Step 5: Click here to Update the System" type="object" class="oe_highlight"  />
 							<field name="readfromexcel" />
 					</group>
 					<group col="2">
