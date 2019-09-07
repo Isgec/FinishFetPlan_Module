@@ -33,15 +33,16 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         self.readfromexcel = 'Start:'
         itempos = 14
         relativedate = 0
-        my_max_col = 100
+        my_max_col = 120
         for thisheader_ids in header_ids:
             self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
+            my_max_col = 120
             for thisitems_ids in thisheader_ids.itemplan_id:
                 if thisitems_ids.date >= self.from_dt:
                     jobroutingid = thisitems_ids.jobrouting_id.id
                     plandate = thisitems_ids.date
-                    self.readfromexcel = self.readfromexcel + ', Unlinked->' + str(thisitems_ids.date)
+                    #self.readfromexcel = self.readfromexcel + ', Unlinked->' + str(thisitems_ids.date)
                     thisitems_ids.unlink()  # Delete Record  from Item table With particular
 
             for i in range(4, my_max_col + 1, 3):
@@ -50,13 +51,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-
+                #self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
-                    self.readfromexcel = self.readfromexcel + \
-                                         ' {Job:' + thisjob.name + \
-                                         ' Date:' + str(getdt) + \
-                                         'Shift A:' + str(getcol.value) + \
-                                         '} '
+                    #self.readfromexcel = self.readfromexcel + \
+                    #                     ' {Job:' + thisjob.name + \
+                    #                     ' Date:' + str(getdt) + \
+                    #                     'Shift A:' + str(getcol.value) + \
+                    #                     '} '
                     # add record  for Shift A
                     thisheader_ids.itemplan_id.create(
                         {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': thisjob.id,
@@ -71,13 +72,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i + 1)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-
+                #self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift B:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
-                    self.readfromexcel = self.readfromexcel + \
-                                         ' {Job:' + thisjob.name + \
-                                         ' Date:' + str(getdt) + \
-                                         'Shift B:' + str(getcol.value) + \
-                                         '} '
+                    #self.readfromexcel = self.readfromexcel + \
+                    #                     ' {Job:' + thisjob.name + \
+                    #                     ' Date:' + str(getdt) + \
+                    #                     'Shift B:' + str(getcol.value) + \
+                    #                     '} '
                     # add record  for Shift B
                     thisheader_ids.itemplan_id.create(
                         {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': thisjob.id,
@@ -92,13 +93,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i + 2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-
+                #self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift C:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
-                    self.readfromexcel = self.readfromexcel + \
-                                         ' {Job:' + thisjob.name + \
-                                         ' Date:' + str(getdt) + \
-                                         'Shift C:' + str(getcol.value) + \
-                                         '} '
+                    #self.readfromexcel = self.readfromexcel + \
+                    #                     ' {Job:' + thisjob.name + \
+                    #                     ' Date:' + str(getdt) + \
+                    #                     'Shift C:' + str(getcol.value) + \
+                    #                     '} '
                     # add record  for Shift C
                     thisheader_ids.itemplan_id.create(
                         {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': thisjob.id,
