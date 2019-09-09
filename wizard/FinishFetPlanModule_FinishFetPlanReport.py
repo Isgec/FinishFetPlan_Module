@@ -16,7 +16,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
     uploadedfilename = fields.Char('File Name', size=256, default='Select Revised Plan')
     readfromexcel = fields.Text('Final Step')
     download_file = fields.Binary(string="Step 3: Download Generated Plan and Review the Load")
-    downloadedfilename = fields.Char('File Name', size=256, default='Download Generated Plan ')
+    downloadedfilename = fields.Char('File Name', size=256, default='Download Generated Plan.xlsx')
 
 
     def upload_excel(self, data, context=None):
