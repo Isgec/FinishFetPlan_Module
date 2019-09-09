@@ -17,6 +17,9 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
     readfromexcel = fields.Text('Final Step')
     download_file = fields.Binary(string="Step 3: Download Generated Plan and Review the Load")
     downloadedfilename = fields.Char('File Name', size=256, default='Download Generated Plan.xlsx')
+    report_flag = fields.Integer('Report Genrated Flag')
+    remarks = fields.Text('Remarks')
+
 
 
     def upload_excel(self, data, context=None):
@@ -307,6 +310,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         wb.save(fp)
         out = base64.encodestring(fp.getvalue())
         self.download_file = out
+        self.report_flag = 1
         # view_ffpreport_id = self.env['view.ffpreport'].create(
         #     {'name': reportname, 'file_name': filename, 'datas_fname': out})
         # return {
@@ -318,11 +322,3 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         #     'view_id': False,
         #     'type': 'ir.actions.act_window',
         # }
-
-
-class view_ffpreport(models.TransientModel):
-    _name = 'view.ffpreport'
-    _rec_name = 'file_name'
-    name = fields.Char('Report Name', size=256)
-    file_name = fields.Char('File Name', size=256)
-    datas_fname = fields.Binary('Report')

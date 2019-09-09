@@ -7,10 +7,10 @@ name="Generate Finish Fet Plan"
 res_model="finishfetplanmodule.finishfetplanreport" />
 	<menuitem
             id="finishfetplanmodule_finishfetplanreport_menu"
-            name="Generate Excel Sheet"
+            name="Generate Finish Fet Plan"
             action="finishfetplanmodule_finishfetplanreport_export"
             parent="FinishFetPlanModule_mainmenu"
-            sequence="10" />
+            sequence="1" />
     	<!--Export Form & Action -->
 
         <record id="view_finishfetplanmodule_finishfetplanreport" model="ir.ui.view">
@@ -20,40 +20,56 @@ res_model="finishfetplanmodule.finishfetplanreport" />
                 <form string="Dashboard">
 					<sheet>
 					<group col="3">
-							<field name="from_dt"/>
+							<field name="from_dt" attrs="{'readonly': [('report_flag', '=', 1)]}"   />
 							<button name="button_excel" string=" Step 2: Click here to Generate Plan in Excel" type="object" class="oe_highlight"  />
 							<field name="download_file" filename="downloadedfilename" readonly="True" />
 							<field name="downloadedfilename" invisible="1" readonly="True"/>
 
 					</group>
+
 				<br /><br /><br />	<group col="3">
 							<field name="upload_file" filename="uploadedfilename"/>
-							<field name="uploadedfilename" invisible="1"/>
 							<button name="upload_excel" string="Step 5: Click here to Update the System" type="object" class="oe_highlight"  />
-							<field name="readfromexcel" />
+							<field name="uploadedfilename" invisible="1"/>
+
 					</group>
+
+						<group col="2">
+							<field name="readfromexcel" />
+						</group>
+
+					<group col="2">
+							<field name="remarks"/>
+					</group>
+				   	<group col="2">
+						<field name="report_flag" invisible="1" readonly="True" />
+					</group>
+
 					<group col="2">
 						<button string="Cancel" class="oe_link" special="cancel" />
 					</group>
+
+
 
 					</sheet>
                  </form>
             </field>
         </record>
-        <record id="excel_finishfetplanmodule_finishfetplanreport" model="ir.ui.view">
-			<field name="name">view.ffpreport</field>
-			<field name="model">view.ffpreport</field>
-			<field name="arch" type="xml">
-				<form string="popup">
-					<sheet>
-						<group col="4" colspan="2">
-							<field name="name"/>
-							<field name="datas_fname" filename="file_name"/>
-							<field name="file_name" invisible="1"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
+   <record id="finsihfetplanmodule_ItemPlanTable_view_tree" model="ir.ui.view">
+  <field name="name">Application Table Name List</field>
+  <field name="model">finishfetplanmodule.itemplantable</field>
+  <field name="arch" type="xml">
+    <tree>
+        <field name="jobrouting_id"/>
+        <field name="date"/>
+        <field name="shift_a"/>
+        <field name="shift_b"/>
+        <field name="shift_c"/>
+        <field name="error_log_a" />
+        <field name="error_log_b"/>
+        <field name="error_log_c"/>
+    </tree>
+    </field>
+</record>
 </odoo>
 
