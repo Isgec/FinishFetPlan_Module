@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+
+<odoo>
+<!--<act_window-->
+<!--id="finishfetplanmodule_actualitemreport_export"-->
+<!--name="Finish Fet Item List (Actual Progress)"-->
+<!--res_model="finishfetplanmodule.actualitemreport" />-->
+<!--	<menuitem-->
+<!--            id="finishfetplanmodule_actualitemreport_menu"-->
+<!--            name="Update Finish Fet Actual"-->
+<!--            action="finishfetplanmodule_actualitemreport_export"-->
+<!--            parent="FinishFetPlanModule_mainmenu"-->
+<!--            sequence="1" />-->
+<!--    	&lt;!&ndash;Export Form & Action &ndash;&gt;-->
+
+        <record id="view_finishfetplanmodule_actualitemreport" model="ir.ui.view">
+            <field name="name">Dashboard-1</field>
+            <field name="model">finishfetplanmodule.actualitemreport</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard">
+					<sheet>
+					<group col="3">
+							<field name="from_dt" />
+					</group>
+
+					<group col="3">
+							<field name="upload_file" filename="uploadedfilename"/>
+							<button name="upload_excel" string="Click here to Update the System" type="object" class="oe_highlight"  />
+							<field name="uploadedfilename" invisible="1"/>
+
+					</group>
+
+						<group col="2">
+							<field name="readfromexcel" />
+						</group>
+
+					<group col="2">
+							<field name="remarks"/>
+					</group>
+
+
+					<group col="2">
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</group>
+
+
+
+					</sheet>
+                 </form>
+            </field>
+        </record>
+  <record id="finsihfetplanmodule_actualitemreport_view_tree" model="ir.ui.view">
+  <field name="name">Application Table Name List</field>
+  <field name="model">finishfetplanmodule.actualitemreport</field>
+  <field name="arch" type="xml">
+    <tree>
+        <field name="from_dt"/>
+        <field name="remarks"/>
+    </tree>
+    </field>
+</record>
+</odoo>
+

@@ -15,6 +15,9 @@
 		     'views/FinishFetPlanModule_ItemPlanTable.xml',
 		     'views/FinishFetPlanModule_ItemPlanHeaderTable.xml',
 		     'wizard/FinishFetPlanModule_FinishFetPlanReport_view.xml',
+		     'wizard/FinishFetPlanModule_ActualItemReport_view.xml',
+		     'views/FinishFetPlanModule_ActualItemPlanTable.xml',
 	         'security/ir.model.access.csv',
+
 	         ],	
 }

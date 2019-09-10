@@ -11,6 +11,7 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
     _name = 'finishfetplanmodule.itemplanheadertable'
 
     itemplan_id = fields.One2many('finishfetplanmodule.itemplantable', 'itemplanheader_id')
+    actualitemplan_id = fields.One2many('finishfetplanmodule.actualitemplantable', 'itemplanheader_id')
     name = fields.Char('Item ', required=True)
     wo_srno = fields.Char('W.O/ SNo. ', required=True)
     plan_date = fields.Date('Plan Date ', required=True)
@@ -19,6 +20,12 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
         for record in self.itemplan_id:
             if record:
                 record.date = self.plan_date + timedelta(days=record.lag_days)
+
+    def rescheduledate2(self, data, context=None):
+        for record in self.actualitemplan_id:
+            if record:
+                record.date = self.plan_date + timedelta(days=record.lag_days)
+
 
 
     def button_excel(self, data, context=None):

@@ -4,12 +4,13 @@
 id="FinishFetPlanModule_ManpowerTable_action"
 name="Manpower Availability "
 res_model="finishfetplanmodule.manpowertable" />
+<menuitem id="FinishFetPlanModule_mainmenu" name="FINISH FET PLAN Module"/>
 <menuitem
  id="finishfetplanmodule_ManpowerTable_menu"
  name="Manpower"
  action="FinishFetPlanModule_ManpowerTable_action"
  parent="FinishFetPlanModule_mainmenu"
- sequence="20" />
+ sequence="3" />
 
 <record id ="finishfetplanmodule_ManpowerTable_view_form" model="ir.ui.view">
    <field name="name">Application Table Name Form</field>

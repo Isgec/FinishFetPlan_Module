@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<act_window
-id="FinishFetPlanModule_ItemPlanHeaderTable_action"
-name="Item Plan"
-res_model="finishfetplanmodule.itemplanheadertable" />
-<menuitem id="FinishFetPlanModule_mainmenu" name="FINISH FET PLAN Module"/>
-<menuitem
- id="finishfetplanmodule_ItemPlanHeaderTable_menu"
- name="Item Plan"
- action="FinishFetPlanModule_ItemPlanHeaderTable_action"
- parent="FinishFetPlanModule_mainmenu"
- sequence="2" />
 
 <record id ="finishfetplanmodule_ItemPlanHeaderTable_view_form" model="ir.ui.view">
    <field name="name">FinishFet Planning Form</field>
@@ -37,7 +26,6 @@ res_model="finishfetplanmodule.itemplanheadertable" />
 	    </form>
    </field>
 </record>
-
 <record id="finsihfetplanmodule_ItemPlanHeaderTable_view_tree" model="ir.ui.view">
   <field name="name">FinishFet Plan List</field>
   <field name="model">finishfetplanmodule.itemplanheadertable</field>
@@ -49,21 +37,59 @@ res_model="finishfetplanmodule.itemplanheadertable" />
     </tree>
     </field>
 </record>
-    <record id="excel_plan" model="ir.ui.view">
-			<field name="name">view.empreport</field>
-			<field name="model">view.empreport</field>
-			<field name="arch" type="xml">
-				<form string="popup">
-					<sheet>
-						<group col="4" colspan="2">
-							<field name="name"/>
-							<field name="datas_fname" filename="file_name"/>
-							<field name="file_name" invisible="1"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
+
+<record id ="finishfetplanmodule_ItemPlanHeaderTable_view_form_actual" model="ir.ui.view">
+   <field name="name">FinishFet Planning Form</field>
+   <field name="model">finishfetplanmodule.itemplanheadertable</field>
+   <field name="arch" type="xml">
+         <form>
+               <sheet>
+                   <group col="4">
+                       <field name="name"/>
+                       <field name="wo_srno"/>
+                   </group>
+                   <group col="3">
+                       <field name="plan_date"/>
+                        <button name="rescheduledate" string="Reschedule Plan" type="object" class="oe_highlight"  />
+                   </group>
+
+                   <br/>   <br/>  <field name="actualitemplan_id"/>
+
+               </sheet>
+	    </form>
+   </field>
+</record>
 
 
+<record id="FinishFetPlanModule_ItemPlanHeaderTable_action_actual" model="ir.actions.act_window">
+            <field name="name">Actual Items Details(Header)</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">finishfetplanmodule.itemplanheadertable</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree'}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('finishfetplanmodule_ItemPlanHeaderTable_view_form_actual')}),
+        (0, 0, {'view_mode': 'kanban'})]"/>
+    <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+            Click to define a new product.
+        </p>
+    </field>
+</record>
+
+<act_window
+id="FinishFetPlanModule_ItemPlanHeaderTable_action"
+name="Item Plan"
+res_model="finishfetplanmodule.itemplanheadertable" />
+<menuitem
+ id="finishfetplanmodule_ItemPlanHeaderTable_menu"
+ name="Item Plan"
+ action="FinishFetPlanModule_ItemPlanHeaderTable_action"
+ parent="FinishFetPlanModule_mainmenu"
+ sequence="2" />
+<!-- <menuitem-->
+<!-- id="finishfetplanmodule_ItemPlanHeaderTable_actual_menu"-->
+<!-- name="Item Actual (Header)"-->
+<!-- action="FinishFetPlanModule_ItemPlanHeaderTable_action_actual"-->
+<!-- parent="FinishFetPlanModule_mainmenu"-->
+<!-- sequence="5"/>-->
 </odoo>

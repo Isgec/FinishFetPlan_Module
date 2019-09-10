@@ -10,17 +10,15 @@ from tempfile import TemporaryFile
 
 class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
     _name = 'finishfetplanmodule.finishfetplanreport'
-    from_dt = fields.Date('Step 1: Select Date for which to Generate Plan ', required=True)
+    from_dt = fields.Date('Step 1: Set the Date', required=True)
     name = fields.Char('Finish Fet Excel Sheet')
-    upload_file = fields.Binary(string="Step 4: Upload Revised Plan")
+    upload_file = fields.Binary(string="Step 2: Upload Excel File having Plan and Actual")
     uploadedfilename = fields.Char('File Name', size=256, default='Select Revised Plan')
     readfromexcel = fields.Text('Final Step')
-    download_file = fields.Binary(string="Step 3: Download Generated Plan and Review the Load")
+    download_file = fields.Binary(string="Step 4: Download Generated Plan and Review the Load")
     downloadedfilename = fields.Char('File Name', size=256, default='Download Generated Plan.xlsx')
     report_flag = fields.Integer('Report Genrated Flag')
     remarks = fields.Text('Remarks')
-
-
 
     def upload_excel(self, data, context=None):
         # Generating of the excel file to be read by openpyxl
@@ -37,7 +35,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
         self.readfromexcel = ''
-        itempos = 14
+        itempos = 26
         relativedate = 0
         my_max_col = 120
         for thisheader_ids in header_ids:
@@ -48,7 +46,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 if thisitems_ids.date >= self.from_dt:
                     jobroutingid = thisitems_ids.jobrouting_id.id
                     plandate = thisitems_ids.date
-                    #self.readfromexcel = self.readfromexcel + ', Unlinked->' + str(thisitems_ids.date)
+                    # self.readfromexcel = self.readfromexcel + ', Unlinked->' + str(thisitems_ids.date)
                     thisitems_ids.unlink()  # Delete Record  from Item table With particular
 
             for i in range(4, my_max_col + 1, 3):
@@ -57,9 +55,9 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-                #self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)[139:147]+ '} '
+                # self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
-                    #self.readfromexcel = self.readfromexcel + \
+                    # self.readfromexcel = self.readfromexcel + \
                     #                     ' {Job:' + thisjob.name + \
                     #                     ' Date:' + str(getdt) + \
                     #                     'Shift A:' + str(getcol.value) + \
@@ -78,9 +76,9 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i + 1)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-                #self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift B:' + str(getcol.fill)[139:147]+ '} '
+                # self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift B:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
-                    #self.readfromexcel = self.readfromexcel + \
+                    # self.readfromexcel = self.readfromexcel + \
                     #                     ' {Job:' + thisjob.name + \
                     #                     ' Date:' + str(getdt) + \
                     #                     'Shift B:' + str(getcol.value) + \
@@ -99,9 +97,9 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i + 2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-                #self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift C:' + str(getcol.fill)[139:147]+ '} '
+                # self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift C:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
-                    #self.readfromexcel = self.readfromexcel + \
+                    # self.readfromexcel = self.readfromexcel + \
                     #                     ' {Job:' + thisjob.name + \
                     #                     ' Date:' + str(getdt) + \
                     #                     'Shift C:' + str(getcol.value) + \
@@ -117,7 +115,74 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
-        self.readfromexcel = 'Step 6: You may Regenerate the Plan to review the Impact on Load, or SAVE and data for future reference'
+
+        #  Update Actual Item
+        header_obj = self.env['finishfetplanmodule.itemplanheadertable']
+        header_ids = header_obj.search([(1, '=', 1)])
+        self.readfromexcel = ''
+        itempos = 27
+        relativedate = 0
+        my_max_col = 120
+        for thisheader_ids in header_ids:
+            self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
+            relativedate = 0
+            my_max_col = 120
+            for thisitems_ids in thisheader_ids.actualitemplan_id:
+                if thisitems_ids.date >= self.from_dt:
+                    jobroutingid = thisitems_ids.jobrouting_id.id
+                    plandate = thisitems_ids.date
+                    thisitems_ids.unlink()  # Delete Record  from Item table With particular
+
+            for i in range(4, my_max_col + 1, 3):
+                # Reading for Shift A
+                getdt = self.from_dt + timedelta(relativedate)
+                getcol = worksheet.cell(row=itempos, column=i)
+                jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
+                jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
+                for thisjob in jobrouting_id:
+                    thisheader_ids.actualitemplan_id.create(
+                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': thisjob.id,
+                         'date': getdt,
+                         'name': 'Added Shift A',
+                         'shift_a': getcol.value,
+                         'shift_b': 0,
+                         'shift_c': 0})
+
+                # Reading for Shift B
+                getdt = self.from_dt + timedelta(relativedate)
+                getcol = worksheet.cell(row=itempos, column=i + 1)
+                jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
+                jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
+                for thisjob in jobrouting_id:
+                    # add record  for Shift B
+                    thisheader_ids.actualitemplan_id.create(
+                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': thisjob.id,
+                         'date': getdt,
+                         'name': 'Added Shift B',
+                         'shift_a': 0,
+                         'shift_b': getcol.value,
+                         'shift_c': 0})
+
+                # Reading for Shift C
+                getdt = self.from_dt + timedelta(relativedate)
+                getcol = worksheet.cell(row=itempos, column=i + 2)
+                jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
+                jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
+
+                for thisjob in jobrouting_id:
+                    # add record  for Shift C
+                    thisheader_ids.actualitemplan_id.create(
+                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': thisjob.id,
+                         'date': getdt,
+                         'name': 'Added Shift C',
+                         'shift_a': 0,
+                         'shift_b': 0,
+                         'shift_c': getcol.value})
+
+                relativedate = relativedate + 1
+            itempos = itempos + 2
+        self.button_excel(data, context=None)
+        self.readfromexcel = 'Step 6: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
 
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
@@ -133,7 +198,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
         itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
         itemheader_ids = itemheader_obj.search([(1, '=', 1)])
-        row = 14
+        row = 26
         for thisitems_id in itemheader_ids:
             setcol1 = worksheet.cell(row=row, column=1)
             setcol1.value = thisitems_id.name or ''
@@ -145,7 +210,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     datediff = (thisitem.date - self.from_dt)
                     col = ((datediff.days + 1) * 3) + 1
                     dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
-                    setdate = worksheet.cell(row=12, column=col)
+                    setdate = worksheet.cell(row=24, column=col)
                     setdate.value = dateStr
 
                     colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
@@ -183,7 +248,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                                 thisitem.error_log_c = ''
             row = row + 2
 
-        wb.active = 1
+        wb.active = 0
         worksheet = wb.active
         itemheader_obj = self.env['finishfetplanmodule.manpowertable']
         item_ids = itemheader_obj.search([(1, '=', 1)])
@@ -207,12 +272,12 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         for thisitem in item_ids:
             if thisitem.date >= self.from_dt:
                 datediff = (thisitem.date - self.from_dt)
-                col = ((datediff.days + 1) * 3)
+                col = ((datediff.days + 1) * 3) + 1
                 dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
-                setdate = worksheet.cell(row=2, column=col)
+                setdate = worksheet.cell(row=11, column=col)
                 setdate.value = dateStr
                 if thisitem.jobrouting_id.name == 'WELDING':
-                    row = 5
+                    row = 14
                     if thisitem.shift_a > 0:
                         setcol = worksheet.cell(row=row - 1, column=col)
                         setcol.value = welding_shift_a
@@ -243,7 +308,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                             setcol4.value = thisitem.shift_c
 
                 if thisitem.jobrouting_id.name == 'GRINDING':
-                    row = 8
+                    row = 17
                     if thisitem.shift_a > 0:
                         setcol = worksheet.cell(row=row - 1, column=col)
                         setcol.value = grinding_shift_a
@@ -274,7 +339,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                             setcol4.value = thisitem.shift_c
 
                 if thisitem.jobrouting_id.name == 'Gouging':
-                    row = 11
+                    row = 20
                     if thisitem.shift_a > 0:
                         setcol = worksheet.cell(row=row - 1, column=col)
                         setcol.value = gouging_shift_a
@@ -304,6 +369,185 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         else:
                             setcol4.value = thisitem.shift_c
 
+
+        wb.active = 0
+        worksheet = wb.active
+        # Generating Actual Portion
+
+        itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
+        itemheader_ids = itemheader_obj.search([(1, '=', 1)])
+        row = 27
+        for thisitems_id in itemheader_ids:
+            # Thse are already set while writing Plan portion. Row 15 is merged with Row 14 so write not possible
+            # setcol1 = worksheet.cell(row=row, column=1)
+            # setcol1.value = thisitems_id.name or ''
+            # setcol1 = worksheet.cell(row=row, column=2)
+            # setcol1.value = thisitems_id.wo_srno or ''
+
+            for thisitem in thisitems_id.actualitemplan_id:
+                if thisitem.date >= self.from_dt:
+                    datediff = (thisitem.date - self.from_dt)
+                    col = ((datediff.days + 1) * 3) + 1
+                    dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
+                    setdate = worksheet.cell(row=24, column=col)
+                    setdate.value = dateStr
+
+                    colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
+                                            end_color=thisitem.jobrouting_id.colour, fill_type='solid')
+                    if thisitem.shift_a > 0:
+                        setcol2 = worksheet.cell(row=row, column=col)
+                        if setcol2.value:
+                            thisitem.error_log_a = 'Conflicts with other plan A'
+                        else:
+                            setcol2.value = thisitem.shift_a or ''
+                            setcol2.fill = colorfill
+                            if thisitem.error_log_a == 'Conflicts with other plan A':
+                                thisitem.error_log_a = ''
+                    col = col + 1
+
+                    if thisitem.shift_b > 0:
+                        setcol3 = worksheet.cell(row=row, column=col)
+                        if setcol3.value:
+                            thisitem.error_log_b = 'Conflicts with other plan B'
+                        else:
+                            setcol3.value = thisitem.shift_b or ''
+                            setcol3.fill = colorfill
+                            if thisitem.error_log_b == 'Conflicts with other plan B':
+                                thisitem.error_log_b = ''
+                    col = col + 1
+
+                    if thisitem.shift_c > 0:
+                        setcol4 = worksheet.cell(row=row, column=col)
+                        if setcol4.value:
+                            thisitem.error_log_c = 'Conflicts with other plan C'
+                        else:
+                            setcol4.value = thisitem.shift_c
+                            setcol4.fill = colorfill
+                            if thisitem.error_log_c == 'Conflicts with other plan C':
+                                thisitem.error_log_c = ''
+            row = row + 2
+        # Load sheet for Actual is not ready till template is finalised
+        # wb.active = 1
+        # worksheet = wb.active
+        # itemheader_obj = self.env['finishfetplanmodule.manpowertable']
+        # item_ids = itemheader_obj.search([(1, '=', 1)])
+        # for thisitem in item_ids:
+        #     if thisitem.jobrouting_id.name == 'WELDING':
+        #         welding_shift_a = thisitem.shift_a
+        #         welding_shift_b = thisitem.shift_b
+        #         welding_shift_c = thisitem.shift_c
+        #     if thisitem.jobrouting_id.name == 'GRINDING':
+        #         grinding_shift_a = thisitem.shift_a
+        #         grinding_shift_b = thisitem.shift_b
+        #         grinding_shift_c = thisitem.shift_c
+        #     if thisitem.jobrouting_id.name == 'Gouging':
+        #         gouging_shift_a = thisitem.shift_a
+        #         gouging_shift_b = thisitem.shift_b
+        #         gouging_shift_c = thisitem.shift_c
+        #
+        # itemheader_obj = self.env['finishfetplanmodule.actualitemplantable']
+        # item_ids = itemheader_obj.search([('date', '>=', self.from_dt)])
+        #
+        # for thisitem in item_ids:
+        #     if thisitem.date >= self.from_dt:
+        #         datediff = (thisitem.date - self.from_dt)
+        #         col = ((datediff.days + 1) * 3)
+        #         dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
+        #         setdate = worksheet.cell(row=2, column=col)
+        #         setdate.value = dateStr
+        #         if thisitem.jobrouting_id.name == 'WELDING':
+        #             row = 5
+        #             if thisitem.shift_a > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = welding_shift_a
+        #                 setcol2 = worksheet.cell(row=row, column=col)
+        #                 if setcol2.value:
+        #                     setcol2.value = setcol2.value + thisitem.shift_a or ''
+        #                 else:
+        #                     setcol2.value = thisitem.shift_a or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_b > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = welding_shift_b
+        #                 setcol3 = worksheet.cell(row=row, column=col)
+        #                 if setcol3.value:
+        #                     setcol3.value = setcol3.value + thisitem.shift_b or ''
+        #                 else:
+        #                     setcol3.value = thisitem.shift_b or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_c > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = welding_shift_c
+        #                 setcol4 = worksheet.cell(row=row, column=col)
+        #                 if setcol4.value:
+        #                     setcol4.value = setcol4.value + thisitem.shift_c
+        #                 else:
+        #                     setcol4.value = thisitem.shift_c
+        #
+        #         if thisitem.jobrouting_id.name == 'GRINDING':
+        #             row = 8
+        #             if thisitem.shift_a > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = grinding_shift_a
+        #                 setcol2 = worksheet.cell(row=row, column=col)
+        #                 if setcol2.value:
+        #                     setcol2.value = setcol2.value + thisitem.shift_a or ''
+        #                 else:
+        #                     setcol2.value = thisitem.shift_a or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_b > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = grinding_shift_b
+        #                 setcol3 = worksheet.cell(row=row, column=col)
+        #                 if setcol3.value:
+        #                     setcol3.value = setcol3.value + thisitem.shift_b or ''
+        #                 else:
+        #                     setcol3.value = thisitem.shift_b or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_c > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = grinding_shift_c
+        #                 setcol4 = worksheet.cell(row=row, column=col)
+        #                 if setcol4.value:
+        #                     setcol4.value = setcol4.value + thisitem.shift_c
+        #                 else:
+        #                     setcol4.value = thisitem.shift_c
+        #
+        #         if thisitem.jobrouting_id.name == 'Gouging':
+        #             row = 11
+        #             if thisitem.shift_a > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = gouging_shift_a
+        #                 setcol2 = worksheet.cell(row=row, column=col)
+        #                 if setcol2.value:
+        #                     setcol2.value = setcol2.value + thisitem.shift_a or ''
+        #                 else:
+        #                     setcol2.value = thisitem.shift_a or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_b > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = gouging_shift_b
+        #                 setcol3 = worksheet.cell(row=row, column=col)
+        #                 if setcol3.value:
+        #                     setcol3.value = setcol3.value + thisitem.shift_b or ''
+        #                 else:
+        #                     setcol3.value = thisitem.shift_b or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_c > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = gouging_shift_c
+        #                 setcol4 = worksheet.cell(row=row, column=col)
+        #                 if setcol4.value:
+        #                     setcol4.value = setcol4.value + thisitem.shift_c
+        #                 else:
+        #                     setcol4.value = thisitem.shift_c
+
         wb.active = 0
         worksheet = wb.active
         fp = io.BytesIO()
@@ -311,14 +555,3 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         out = base64.encodestring(fp.getvalue())
         self.download_file = out
         self.report_flag = 1
-        # view_ffpreport_id = self.env['view.ffpreport'].create(
-        #     {'name': reportname, 'file_name': filename, 'datas_fname': out})
-        # return {
-        #     'res_id': view_ffpreport_id.id,
-        #     'name': 'Finish Fet Plan Report',
-        #     'view_type': 'form',
-        #     'view_mode': 'form',
-        #     'res_model': 'view.ffpreport',
-        #     'view_id': False,
-        #     'type': 'ir.actions.act_window',
-        # }
