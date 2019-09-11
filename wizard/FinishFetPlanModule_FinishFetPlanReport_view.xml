@@ -31,9 +31,6 @@ res_model="finishfetplanmodule.finishfetplanreport" />
 						<field name="downloadedfilename" invisible="1" readonly="True"/>
 
 					</group>
-
-
-
 						<group col="2">
 							<field name="readfromexcel" />
 						</group>
