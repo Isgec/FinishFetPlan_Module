@@ -6,6 +6,7 @@ from datetime import timedelta
 from os import path
 from openpyxl.styles import PatternFill
 from tempfile import TemporaryFile
+from openpyxl.comments import Comment
 
 
 class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
@@ -182,12 +183,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 relativedate = relativedate + 1
             itempos = itempos + 2
         self.button_excel(data, context=None)
-        self.readfromexcel = 'Step 6: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
+        self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
 
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
         fillGOUGING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
         fillWELDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
+        commGRINDING = [None] * 200
+        commGOUGING = [None] * 200
+        commWELDING = [None] * 200
         src = path.dirname(path.realpath(__file__)) + "/FinishFetplan.xlsx"
         wb = openpyxl.load_workbook(src)
         wb.active = 0
@@ -196,58 +200,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         reportname = "FinishFetPlan:"
         self.name = 'Finish Fet Plan Report as on: ' + str(self.from_dt)
 
-        itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
-        itemheader_ids = itemheader_obj.search([(1, '=', 1)])
-        row = 26
-        for thisitems_id in itemheader_ids:
-            setcol1 = worksheet.cell(row=row, column=1)
-            setcol1.value = thisitems_id.name or ''
-            setcol1 = worksheet.cell(row=row, column=2)
-            setcol1.value = thisitems_id.wo_srno or ''
-
-            for thisitem in thisitems_id.itemplan_id:
-                if thisitem.date >= self.from_dt:
-                    datediff = (thisitem.date - self.from_dt)
-                    col = ((datediff.days + 1) * 3) + 1
-                    dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
-                    setdate = worksheet.cell(row=24, column=col)
-                    setdate.value = dateStr
-
-                    colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
-                                            end_color=thisitem.jobrouting_id.colour, fill_type='solid')
-                    if thisitem.shift_a > 0:
-                        setcol2 = worksheet.cell(row=row, column=col)
-                        if setcol2.value:
-                            thisitem.error_log_a = 'Conflicts with other plan A'
-                        else:
-                            setcol2.value = thisitem.shift_a or ''
-                            setcol2.fill = colorfill
-                            if thisitem.error_log_a == 'Conflicts with other plan A':
-                                thisitem.error_log_a = ''
-                    col = col + 1
-
-                    if thisitem.shift_b > 0:
-                        setcol3 = worksheet.cell(row=row, column=col)
-                        if setcol3.value:
-                            thisitem.error_log_b = 'Conflicts with other plan B'
-                        else:
-                            setcol3.value = thisitem.shift_b or ''
-                            setcol3.fill = colorfill
-                            if thisitem.error_log_b == 'Conflicts with other plan B':
-                                thisitem.error_log_b = ''
-                    col = col + 1
-
-                    if thisitem.shift_c > 0:
-                        setcol4 = worksheet.cell(row=row, column=col)
-                        if setcol4.value:
-                            thisitem.error_log_c = 'Conflicts with other plan C'
-                        else:
-                            setcol4.value = thisitem.shift_c
-                            setcol4.fill = colorfill
-                            if thisitem.error_log_c == 'Conflicts with other plan C':
-                                thisitem.error_log_c = ''
-            row = row + 2
-
+        # Start of Section to generate load portion of sheet
         wb.active = 0
         worksheet = wb.active
         itemheader_obj = self.env['finishfetplanmodule.manpowertable']
@@ -284,6 +237,12 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol2 = worksheet.cell(row=row, column=col)
                         if setcol2.value:
                             setcol2.value = setcol2.value + thisitem.shift_a or ''
+                            # Setting value of comment if WELDER is Overloaded in Shift A
+                            if welding_shift_a < setcol2.value:
+                                commWELDING[col] = Comment(
+                                    'Overloaded: Out of ' + str(welding_shift_a) + ' WELDER in Shift A loaded ' + str(
+                                        setcol2.value), 'System')
+                            # END of : Setting value of comment if WELDER is Overloaded in Shift A
                         else:
                             setcol2.value = thisitem.shift_a or ''
                     col = col + 1
@@ -294,6 +253,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol3 = worksheet.cell(row=row, column=col)
                         if setcol3.value:
                             setcol3.value = setcol3.value + thisitem.shift_b or ''
+                            # Setting value of comment if WELDER is Overloaded in Shift B
+                            if welding_shift_b < setcol3.value:
+                                commWELDING[col] = Comment(
+                                    'Overloaded: Out of ' + str(welding_shift_b) + ' WELDER in Shift B loaded ' + str(
+                                        setcol3.value), 'System')
+                            # END of : Setting value of comment if WELDER is Overloaded in Shift B
+
                         else:
                             setcol3.value = thisitem.shift_b or ''
                     col = col + 1
@@ -304,6 +270,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol4 = worksheet.cell(row=row, column=col)
                         if setcol4.value:
                             setcol4.value = setcol4.value + thisitem.shift_c
+                            # Setting value of comment if WELDER is Overloaded in Shift C
+                            if welding_shift_c < setcol4.value:
+                                commWELDING[col] = Comment(
+                                    'Overloaded: Out of ' + str(welding_shift_c) + ' WELDER in Shift C loaded ' + str(
+                                        setcol4.value), 'System')
+                            # END of : Setting value of comment if WELDER is Overloaded in Shift A
+
                         else:
                             setcol4.value = thisitem.shift_c
 
@@ -315,6 +288,12 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol2 = worksheet.cell(row=row, column=col)
                         if setcol2.value:
                             setcol2.value = setcol2.value + thisitem.shift_a or ''
+                            # Setting value of comment if GRINDING is Overloaded in Shift A
+                            if grinding_shift_a < setcol2.value:
+                                commGRINDING[col] = Comment(
+                                    'Overloaded: Out of ' + str(grinding_shift_a) + ' GRINDING in Shift A loaded ' + str(
+                                        setcol2.value), 'System')
+                            # END of : Setting value of comment if WELDER is Overloaded in Shift A
                         else:
                             setcol2.value = thisitem.shift_a or ''
                     col = col + 1
@@ -325,6 +304,12 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol3 = worksheet.cell(row=row, column=col)
                         if setcol3.value:
                             setcol3.value = setcol3.value + thisitem.shift_b or ''
+                            # Setting value of comment if GRINDING is Overloaded in Shift B
+                            if grinding_shift_b < setcol3.value:
+                                commGRINDING[col] = Comment(
+                                    'Overloaded: Out of ' + str(grinding_shift_b) + ' GRINDING in Shift B loaded ' + str(
+                                        setcol3.value), 'System')
+                            # END of : Setting value of comment if GRINDING is Overloaded in Shift B
                         else:
                             setcol3.value = thisitem.shift_b or ''
                     col = col + 1
@@ -335,6 +320,14 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol4 = worksheet.cell(row=row, column=col)
                         if setcol4.value:
                             setcol4.value = setcol4.value + thisitem.shift_c
+                            # Setting value of comment if GRINDING is Overloaded in Shift C
+                            if grinding_shift_c < setcol4.value:
+                                commGRINDING[col] = Comment(
+                                    'Overloaded: Out of ' + str(
+                                        grinding_shift_c) + ' GRINDING in Shift C loaded ' + str(
+                                        setcol4.value), 'System')
+                            # END of : Setting value of comment if GRINDING is Overloaded in Shift C
+
                         else:
                             setcol4.value = thisitem.shift_c
 
@@ -346,6 +339,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol2 = worksheet.cell(row=row, column=col)
                         if setcol2.value:
                             setcol2.value = setcol2.value + thisitem.shift_a or ''
+                            # Setting value of comment if Gouging is Overloaded in Shift A
+                            if gouging_shift_a < setcol2.value:
+                                commGOUGING[col] = Comment(
+                                    'Overloaded: Out of ' + str(
+                                        gouging_shift_a) + ' Gouging in Shift A loaded ' + str(
+                                        setcol2.value), 'System')
+                            # END of : Setting value of comment if Gouging is Overloaded in Shift A
                         else:
                             setcol2.value = thisitem.shift_a or ''
                     col = col + 1
@@ -356,6 +356,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol3 = worksheet.cell(row=row, column=col)
                         if setcol3.value:
                             setcol3.value = setcol3.value + thisitem.shift_b or ''
+                            # Setting value of comment if Gouging is Overloaded in Shift B
+                            if gouging_shift_b < setcol3.value:
+                                commGOUGING[col] = Comment(
+                                    'Overloaded: Out of ' + str(
+                                        gouging_shift_b) + ' Gouging in Shift B loaded ' + str(
+                                        setcol3.value), 'System')
+                            # END of : Setting value of comment if Gouging is Overloaded in Shift B
                         else:
                             setcol3.value = thisitem.shift_b or ''
                     col = col + 1
@@ -366,10 +373,125 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol4 = worksheet.cell(row=row, column=col)
                         if setcol4.value:
                             setcol4.value = setcol4.value + thisitem.shift_c
+                            # Setting value of comment if Gouging is Overloaded in Shift C
+                            if gouging_shift_c < setcol4.value:
+                                commGOUGING[col] = Comment(
+                                    'Overloaded: Out of ' + str(
+                                        gouging_shift_c) + ' Gouging in Shift C loaded ' + str(
+                                        setcol4.value), 'System')
+                            # END of : Setting value of comment if Gouging is Overloaded in Shift C
                         else:
                             setcol4.value = thisitem.shift_c
+        ## End of Generation of Load portion of sheet
+        # Start of Section to Generate Plan portion of the sheet
+        itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
+        itemheader_ids = itemheader_obj.search([(1, '=', 1)])
+        row = 26
+        for thisitems_id in itemheader_ids:
+            setcol1 = worksheet.cell(row=row, column=1)
+            setcol1.value = thisitems_id.name or ''
+            setcol1 = worksheet.cell(row=row, column=2)
+            setcol1.value = thisitems_id.wo_srno or ''
 
+            for thisitem in thisitems_id.itemplan_id:
+                if thisitem.date >= self.from_dt:
+                    datediff = (thisitem.date - self.from_dt)
+                    col = ((datediff.days + 1) * 3) + 1
+                    dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
+                    setdate = worksheet.cell(row=24, column=col)
+                    setdate.value = dateStr
 
+                    colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
+                                            end_color=thisitem.jobrouting_id.colour, fill_type='solid')
+                    if thisitem.shift_a > 0:
+                        setcol2 = worksheet.cell(row=row, column=col)
+                        if setcol2.value:
+                            thisitem.error_log_a = 'Conflicts with other plan A'
+                        else:
+                            setcol2.value = thisitem.shift_a or ''
+                            setcol2.fill = colorfill
+                            # Setting value of comment if WELDER is Overloaded in Shift A
+                            if thisitem.jobrouting_id.name == 'WELDING':
+                                if commWELDING[col]:
+                                    setcol2.comment = commWELDING[col]
+                            # END of Setting value of comment if WELDER is Overloaded in Shift A
+
+                            # Setting value of comment if GRINDING is Overloaded in Shift A
+                            if thisitem.jobrouting_id.name == 'GRINDING':
+                                if commGRINDING[col]:
+                                    setcol2.comment = commGRINDING[col]
+                            # END of Setting value of comment if GRINDING is Overloaded in Shift A
+
+                            # Setting value of comment if Gouging is Overloaded in Shift A
+                            if thisitem.jobrouting_id.name == 'Gouging':
+                                if commGOUGING[col]:
+                                    setcol2.comment = commGOUGING[col]
+                            # END of Setting value of comment if Gouging is Overloaded in Shift A
+
+                            if thisitem.error_log_a == 'Conflicts with other plan A':
+                                thisitem.error_log_a = ''
+
+                    col = col + 1
+
+                    if thisitem.shift_b > 0:
+                        setcol3 = worksheet.cell(row=row, column=col)
+                        if setcol3.value:
+                            thisitem.error_log_b = 'Conflicts with other plan B'
+                        else:
+                            setcol3.value = thisitem.shift_b or ''
+                            setcol3.fill = colorfill
+                            # Setting value of comment if WELDER is Overloaded in Shift B
+                            if thisitem.jobrouting_id.name == 'WELDING':
+                                if commWELDING[col]:
+                                    setcol3.comment = commWELDING[col]
+                            # END of Setting value of comment if WELDER is Overloaded in Shift B
+
+                            # Setting value of comment if GRINDING is Overloaded in Shift B
+                            if thisitem.jobrouting_id.name == 'GRINDING':
+                                if commGRINDING[col]:
+                                    setcol3.comment = commGRINDING[col]
+                            # END of Setting value of comment if GRINDING is Overloaded in Shift B
+
+                            # Setting value of comment if Gouging is Overloaded in Shift B
+                            if thisitem.jobrouting_id.name == 'Gouging':
+                                if commGOUGING[col]:
+                                    setcol3.comment = commGOUGING[col]
+                            # END of Setting value of comment if Gouging is Overloaded in Shift B
+
+                            if thisitem.error_log_b == 'Conflicts with other plan B':
+                                thisitem.error_log_b = ''
+                    col = col + 1
+
+                    if thisitem.shift_c > 0:
+                        setcol4 = worksheet.cell(row=row, column=col)
+                        if setcol4.value:
+                            thisitem.error_log_c = 'Conflicts with other plan C'
+                        else:
+                            setcol4.value = thisitem.shift_c
+                            setcol4.fill = colorfill
+                            # Setting value of comment if WELDER is Overloaded in Shift C
+                            if thisitem.jobrouting_id.name == 'WELDING':
+                                if commWELDING[col]:
+                                    setcol4.comment = commWELDING[col]
+                            # END of Setting value of comment if WELDER is Overloaded in Shift C
+
+                            # Setting value of comment if GRINDING is Overloaded in Shift B
+                            if thisitem.jobrouting_id.name == 'GRINDING':
+                                if commGRINDING[col]:
+                                    setcol4.comment = commGRINDING[col]
+                            # END of Setting value of comment if GRINDING is Overloaded in Shift C
+
+                            # Setting value of comment if Gouging is Overloaded in Shift C
+                            if thisitem.jobrouting_id.name == 'Gouging':
+                                if commGOUGING[col]:
+                                    setcol4.comment = commGOUGING[col]
+                            # END of Setting value of comment if Gouging is Overloaded in Shift C
+                            if thisitem.error_log_c == 'Conflicts with other plan C':
+                                thisitem.error_log_c = ''
+            row = row + 2
+        ## End of Section to generate Plan portion of the sheet
+
+        # Start of Generation of Actual portion of sheet
         wb.active = 0
         worksheet = wb.active
         # Generating Actual Portion
