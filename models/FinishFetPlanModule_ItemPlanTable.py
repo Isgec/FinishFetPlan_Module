@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class FinishFetPlanModuleItemPlanTable(models.Model):
     _name = 'finishfetplanmodule.itemplantable'
 
-    itemplanheader_id = fields.Many2one('finishfetplanmodule.itemplanheadertable', 'itemplan_id')
+    itemplanheader_id = fields.Many2one('finishfetplanmodule.itemplanheadertable', 'itemplan_id', ondelete='cascade')
     name = fields.Char('Item')
     date = fields.Date('Date ', required=True)
     shift_a = fields.Integer('A', required=True)
