@@ -35,7 +35,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
-        self.readfromexcel = ''
+        self.readfromexcel = 'Start'
         itempos = 26
         relativedate = 0
         my_max_col = 120
@@ -125,7 +125,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         relativedate = 0
         my_max_col = 120
         for thisheader_ids in header_ids:
-            self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
+            #self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
             my_max_col = 120
             for thisitems_ids in thisheader_ids.actualitemplan_id:
