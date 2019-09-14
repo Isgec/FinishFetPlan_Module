@@ -16,6 +16,7 @@ class FinishFetPlanModuleActualItemPlanTable(models.Model):
     error_log_b = fields.Char('Error Log B', readonly=True)
     error_log_c = fields.Char('Error Log C', readonly=True)
     lag_days = fields.Integer('Lag Days', compute='default_date', store=True)
+	cellcolour = fields.Text('CellColor')
 
     @api.depends('date')
     def default_date(self):

@@ -56,7 +56,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-                # self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)[139:147]+ '} '
+                self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)[139:147]+ '} '
                 for thisjob in jobrouting_id:
                     # self.readfromexcel = self.readfromexcel + \
                     #                     ' {Job:' + thisjob.name + \
@@ -120,7 +120,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         #  Update Actual Item
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
-        self.readfromexcel = ''
+        #self.readfromexcel = ''
         itempos = 27
         relativedate = 0
         my_max_col = 120
@@ -183,7 +183,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 relativedate = relativedate + 1
             itempos = itempos + 2
         self.button_excel(data, context=None)
-        self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
+        #self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
 
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
