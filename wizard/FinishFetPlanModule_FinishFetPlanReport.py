@@ -56,7 +56,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 getcol = worksheet.cell(row=itempos, column=i)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
-                self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)[139:147]+ '} '
+                self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill)+ '} '
                 for thisjob in jobrouting_id:
                     # self.readfromexcel = self.readfromexcel + \
                     #                     ' {Job:' + thisjob.name + \
