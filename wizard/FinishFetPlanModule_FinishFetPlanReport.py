@@ -183,7 +183,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 relativedate = relativedate + 1
             itempos = itempos + 2
         self.button_excel(data, context=None)
-        #self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
+        self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
 
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
