@@ -15,6 +15,7 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
     name = fields.Char('Item ', required=True)
     wo_srno = fields.Char('W.O/ SNo. ', required=True)
     plan_date = fields.Date('Plan Date ', required=True)
+    item_status = fields.Boolean(string="Deactivated", default=True)
 
     def rescheduledate(self, data, context=None):
         for record in self.itemplan_id:
@@ -25,7 +26,6 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
         for record in self.actualitemplan_id:
             if record:
                 record.date = self.plan_date + timedelta(days=record.lag_days)
-
 
 
     def button_excel(self, data, context=None):

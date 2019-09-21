@@ -49,6 +49,9 @@
 
                        <field name="jobrouting_id"/>
                        <field name="date"/>
+                       <field name="shift_a_c"/>
+                       <field name="shift_b_c"/>
+                       <field name="shift_c_c"/>
                        <field name="shift_a"/>
                        <field name="shift_b"/>
                        <field name="shift_c"/>

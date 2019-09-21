@@ -34,7 +34,6 @@ res_model="finishfetplanmodule.finishfetplanreport" />
 						<group col="2">
 							<field name="readfromexcel" />
 						</group>
-
 					<group col="2">
 							<field name="remarks"/>
 					</group>
