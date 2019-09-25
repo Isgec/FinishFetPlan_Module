@@ -494,7 +494,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     # for  Decimal or Number  Value Shift A
                     if thisitem.shift_a > 0 and thisitem.jobrouting_id:
                         setcol2 = worksheet.cell(row=row, column=col)
-                        setcol2.value = thisitem.shift_a or ''
+                        setcol2.value = thisitem.shift_a
                         colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
                                                 end_color=thisitem.jobrouting_id.colour, fill_type='solid')
                         setcol2.fill = colorfill
@@ -526,11 +526,11 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         if str(thisitem.bg_color_cell)[0:2] == 'FF':
                             colorfill = PatternFill(start_color=thisitem.bg_color_cell,
                                                     end_color=thisitem.bg_color_cell, fill_type='solid')
-                            setcol2.fill = colorfill
+                            setcol3.fill = colorfill
                     # for  Decimal or Number  Value Shift B
                     if thisitem.shift_b > 0 and thisitem.jobrouting_id:
                         setcol3 = worksheet.cell(row=row, column=col)
-                        setcol3.value = thisitem.shift_b or ''
+                        setcol3.value = thisitem.shift_b
                         colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
                                                 end_color=thisitem.jobrouting_id.colour, fill_type='solid')
                         setcol3.fill = colorfill
@@ -561,7 +561,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         if str(thisitem.bg_color_cell)[0:2] == 'FF':
                             colorfill = PatternFill(start_color=thisitem.bg_color_cell,
                                                     end_color=thisitem.bg_color_cell, fill_type='solid')
-                            setcol2.fill = colorfill
+                            setcol4.fill = colorfill
 
                     # for  Decimal or Number  Value Shift C
                     if thisitem.shift_c > 0 and thisitem.jobrouting_id:
