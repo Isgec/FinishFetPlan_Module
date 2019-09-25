@@ -17,7 +17,7 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
     name = fields.Char('Item ', required=True)
     wo_srno = fields.Char('W.O/ SNo. ', required=True)
     plan_date = fields.Date('Plan Date ', required=True)
-    item_status = fields.Boolean(string="Deactivated", default=True)
+    item_status = fields.Boolean(string="Deactivated")
 
     def rescheduledate(self, data, context=None):
         for record in self.itemplan_id:
