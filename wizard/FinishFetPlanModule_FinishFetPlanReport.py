@@ -260,7 +260,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
-        # self.button_excel(data, context=None)
+        self.button_excel(data, context=None)
         self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
 
     def button_excel(self, data, context=None):
@@ -486,9 +486,10 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     if thisitem.shift_a_c != '':
                         setcol2 = worksheet.cell(row=row, column=col)
                         setcol2.value = thisitem.shift_a_c or ''
-                        colorfill = PatternFill(start_color=thisitem.bg_color_cell,
-                                                end_color=thisitem.bg_color_cell, fill_type='solid')
-                        setcol2.fill = colorfill
+                        if str(thisitem.bg_color_cell)[0:2] == 'FF':
+                            colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                                                    end_color=thisitem.bg_color_cell, fill_type='solid')
+                            setcol2.fill = colorfill
 
                     # for  Decimal or Number  Value Shift A
                     if thisitem.shift_a > 0 and thisitem.jobrouting_id:
@@ -522,9 +523,10 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol3 = worksheet.cell(row=row, column=col)
                         setcol3.value = thisitem.shift_b_c or ''
 
-                        colorfill = PatternFill(start_color=thisitem.bg_color_cell,
-                                                end_color=thisitem.bg_color_cell, fill_type='solid')
-                        setcol3.fill = colorfill
+                        if str(thisitem.bg_color_cell)[0:2] == 'FF':
+                            colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                                                    end_color=thisitem.bg_color_cell, fill_type='solid')
+                            setcol2.fill = colorfill
                     # for  Decimal or Number  Value Shift B
                     if thisitem.shift_b > 0 and thisitem.jobrouting_id:
                         setcol3 = worksheet.cell(row=row, column=col)
@@ -556,9 +558,10 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     if thisitem.shift_c_c != '':
                         setcol4 = worksheet.cell(row=row, column=col)
                         setcol4.value = thisitem.shift_c_c or ''
-                        colorfill = PatternFill(start_color=thisitem.bg_color_cell,
-                                                end_color=thisitem.bg_color_cell, fill_type='solid')
-                        setcol4.fill = colorfill
+                        if str(thisitem.bg_color_cell)[0:2] == 'FF':
+                            colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                                                    end_color=thisitem.bg_color_cell, fill_type='solid')
+                            setcol2.fill = colorfill
 
                     # for  Decimal or Number  Value Shift C
                     if thisitem.shift_c > 0 and thisitem.jobrouting_id:
