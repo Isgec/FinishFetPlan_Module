@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--<act_window-->
-<!--id="FinishFetPlanModule_ItemPlanTable_action"-->
-<!--name="Item Plan Detail"-->
-<!--res_model="finishfetplanmodule.itemplantable" />-->
-<!--<menuitem-->
-<!-- id="finishfetplanmodule_ItemPlanTable_menu"-->
-<!-- name="Item Plan Detail"-->
-<!-- action="FinishFetPlanModule_ItemPlanTable_action"-->
-<!-- parent="FinishFetPlanModule_mainmenu"-->
-<!-- sequence="3" />-->
+<act_window
+id="FinishFetPlanModule_ItemPlanTable_action"
+name="Item Plan Detail"
+res_model="finishfetplanmodule.itemplantable" />
+<menuitem
+ id="finishfetplanmodule_ItemPlanTable_menu"
+ name="Item Plan Detail"
+ action="FinishFetPlanModule_ItemPlanTable_action"
+ parent="FinishFetPlanModule_mainmenu"
+ sequence="3" />
 
 <record id ="finishfetplanmodule_ItemPlanTable_view_form" model="ir.ui.view">
    <field name="name">Application Table Name Form</field>
@@ -36,6 +36,9 @@
                        <field name="name"/>
                        <field name="lag_days"/>
                     </group>
+                    <group col="4">
+                       <field name="bg_color_cell"/>
+                    </group>
 
                </sheet>
 	    </form>
@@ -58,6 +61,8 @@
                        <field name="error_log_a"/>
                        <field name="error_log_b"/>
                        <field name="error_log_c"/>
+                       <field name="bg_color_cell"/>
+
 
 <!--                   <group col="6">-->
 <!--                       <field name="shift_a"/>-->
@@ -78,3 +83,4 @@
 </record>
 
 </odoo>
+

@@ -20,6 +20,7 @@ class FinishFetPlanModuleItemPlanTable(models.Model):
     error_log_b = fields.Char('Error Log B', readonly=True)
     error_log_c = fields.Char('Error Log C', readonly=True)
     lag_days = fields.Integer('Lag Days', compute='default_date', store=True)
+    bg_color_cell= fields.Char('Cell Background Color')
 
     @api.depends('date')
     def default_date(self):
@@ -46,3 +47,4 @@ class FinishFetPlanModuleItemPlanTable(models.Model):
         for record in self:
             if isNumber(record.shift_c_c):
                 record.shift_c = record.shift_c_c
+

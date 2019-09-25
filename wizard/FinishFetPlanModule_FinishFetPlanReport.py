@@ -36,6 +36,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
         self.readfromexcel = 'Start'
+        self.remarks = 'AAA'
         itempos = 26
         relativedate = 0
         my_max_col = 120
@@ -43,6 +44,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
             self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
             my_max_col = 120
+
             for thisitems_ids in thisheader_ids.itemplan_id:
                 if thisitems_ids.date >= self.from_dt:
                     jobroutingid = thisitems_ids.jobrouting_id.id
@@ -52,30 +54,45 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
             for i in range(4, my_max_col + 1, 3):
                 # Reading for Shift A
+
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i)
+                getcolor = worksheet.cell(row=itempos, column=i)
+                bgColor = str(getcolor.fill)[139:147]
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill) + '} '
+
                 setrouting_id = None
                 for thisjob in jobrouting_id:
                     setrouting_id = thisjob.id
                 if setrouting_id:
-                    thisheader_ids.itemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
-                         'date': getdt,
-                         'name': 'Added Shift A',
-                         'shift_a_c': getcol.value,
-                         'shift_b_c': '',
-                         'shift_c_c': ''})
+                    if getcol.value is not None:
+                        getcolor = worksheet.cell(row=itempos, column=i)
+                        bgColor = str(getcolor.fill)[139:147]
+                        thisheader_ids.itemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
+                             'date': getdt,
+                             'name': 'Added Shift A',
+                             'shift_a_c': getcol.value,
+                             'shift_b_c': '',
+                             'shift_c_c': '',
+                             'bg_color_cell': bgColor})
+
+
                 else:
-                    thisheader_ids.itemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id,
-                         'date': getdt,
-                         'name': 'Added TextValue in A',
-                         'shift_a_c': getcol.value,
-                         'shift_b_c': '',
-                         'shift_c_c': ''})
+                    if getcol.value is not None:
+                        getcolor = worksheet.cell(row=itempos, column=i)
+                        bgColor = str(getcolor.fill)[139:147]
+                        thisheader_ids.itemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id,
+                             'date': getdt,
+                             'name': 'Added TextValue in A',
+                             'shift_a_c': getcol.value,
+                             'shift_b_c': '',
+                             'shift_c_c': '',
+                             'bg_color_cell': bgColor})
+
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i + 1)
@@ -86,22 +103,29 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 for thisjob in jobrouting_id:
                     setrouting_id = thisjob.id
                 if setrouting_id:
-                    thisheader_ids.itemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
-                         'date': getdt,
-                         'name': 'Added Shift B',
-                         'shift_a_c': '',
-                         'shift_b_c': getcol.value,
-                         'shift_c_c': ''})
+                    if getcol.value is not None:
+                        getcolor = worksheet.cell(row=itempos, column= i + 1)
+                        bgColor = str(getcolor.fill)[139:147]
+                        thisheader_ids.itemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
+                             'date': getdt,
+                             'name': 'Added Shift B',
+                             'shift_a_c': '',
+                             'shift_b_c': getcol.value,
+                             'shift_c_c': '',
+                             'bg_color_cell': bgColor})
                 else:
-                    thisheader_ids.itemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id,
-                         'date': getdt,
-                         'name': 'Added TextValue in B',
-                         'shift_a_c': '',
-                         'shift_b_c': getcol.value,
-                         'shift_c_c': ''})
-
+                    if getcol.value is not None:
+                        getcolor = worksheet.cell(row=itempos, column=i + 1)
+                        bgColor = str(getcolor.fill)[139:147]
+                        thisheader_ids.itemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id,
+                             'date': getdt,
+                             'name': 'Added TextValue in B',
+                             'shift_a_c': '',
+                             'shift_b_c': getcol.value,
+                             'shift_c_c': '',
+                             'bg_color_cell': bgColor})
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i + 2)
@@ -112,21 +136,29 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 for thisjob in jobrouting_id:
                     setrouting_id = thisjob.id
                 if setrouting_id:
-                    thisheader_ids.itemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
-                         'date': getdt,
-                         'name': 'Added Shift C',
-                         'shift_a_c': '',
-                         'shift_b_c': '',
-                         'shift_c_c': getcol.value})
+                    if getcol.value is not None:
+                        getcolor = worksheet.cell(row=itempos, column=i + 2)
+                        bgColor = str(getcolor.fill)[139:147]
+                        thisheader_ids.itemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
+                             'date': getdt,
+                             'name': 'Added Shift C',
+                             'shift_a_c': '',
+                             'shift_b_c': '',
+                             'shift_c_c': getcol.value,
+                             'bg_color_cell': bgColor})
                 else:
-                    thisheader_ids.itemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id,
-                         'date': getdt,
-                         'name': 'Added TextValue in C',
-                         'shift_a_c': '',
-                         'shift_b_c': '',
-                         'shift_c_c': getcol.value})
+                    if getcol.value is not None:
+                        getcolor = worksheet.cell(row=itempos, column=i + 2)
+                        bgColor = str(getcolor.fill)[139:147]
+                        thisheader_ids.itemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id,
+                             'date': getdt,
+                             'name': 'Added TextValue in C',
+                             'shift_a_c': '',
+                             'shift_b_c': '',
+                             'shift_c_c': getcol.value,
+                             'bg_color_cell': bgColor})
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
@@ -225,7 +257,6 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'shift_a_c': '',
                          'shift_b_c': '',
                          'shift_c_c': getcol.value})
-
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
@@ -431,10 +462,11 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                             # END of : Setting value of comment if Gouging is Overloaded in Shift C
                         else:
                             setcol4.value = thisitem.shift_c
-        ## End of Generation of Load portion of sheet
+
+        # End of Generation of Load portion of sheet
         # Start of Section to Generate Plan portion of the sheet
         itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
-        itemheader_ids = itemheader_obj.search([(1, '=', 1)])
+        itemheader_ids = itemheader_obj.search(['&', ('plan_date', '>=', self.from_dt), ('item_status', '!=', True)])
         row = 26
         for thisitems_id in itemheader_ids:
             setcol1 = worksheet.cell(row=row, column=1)
@@ -454,14 +486,16 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     if thisitem.shift_a_c != '':
                         setcol2 = worksheet.cell(row=row, column=col)
                         setcol2.value = thisitem.shift_a_c or ''
+                        colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                                                end_color=thisitem.bg_color_cell, fill_type='solid')
+                        setcol2.fill = colorfill
 
                     # for  Decimal or Number  Value Shift A
-                    if thisitem.shift_a > 0:
+                    if thisitem.shift_a > 0 and thisitem.jobrouting_id:
                         setcol2 = worksheet.cell(row=row, column=col)
                         setcol2.value = thisitem.shift_a or ''
                         colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
                                                 end_color=thisitem.jobrouting_id.colour, fill_type='solid')
-
                         setcol2.fill = colorfill
                         # Setting value of comment if WELDER is Overloaded in Shift A
                         if thisitem.jobrouting_id.name == 'WELDING':
@@ -481,7 +515,6 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                                 setcol2.comment = commGOUGING[col]
                         # END of Setting value of comment if Gouging is Overloaded in Shift A
 
-
                     col = col + 1
 
                     # for  String  Value Shift B
@@ -489,13 +522,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         setcol3 = worksheet.cell(row=row, column=col)
                         setcol3.value = thisitem.shift_b_c or ''
 
+                        colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                                                end_color=thisitem.bg_color_cell, fill_type='solid')
+                        setcol3.fill = colorfill
                     # for  Decimal or Number  Value Shift B
-                    if thisitem.shift_b > 0:
+                    if thisitem.shift_b > 0 and thisitem.jobrouting_id:
                         setcol3 = worksheet.cell(row=row, column=col)
                         setcol3.value = thisitem.shift_b or ''
                         colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
                                                 end_color=thisitem.jobrouting_id.colour, fill_type='solid')
-
                         setcol3.fill = colorfill
                         # Setting value of comment if WELDER is Overloaded in Shift B
                         if thisitem.jobrouting_id.name == 'WELDING':
@@ -521,14 +556,16 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     if thisitem.shift_c_c != '':
                         setcol4 = worksheet.cell(row=row, column=col)
                         setcol4.value = thisitem.shift_c_c or ''
+                        colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                                                end_color=thisitem.bg_color_cell, fill_type='solid')
+                        setcol4.fill = colorfill
 
                     # for  Decimal or Number  Value Shift C
-                    if thisitem.shift_c > 0:
+                    if thisitem.shift_c > 0 and thisitem.jobrouting_id:
                         setcol4 = worksheet.cell(row=row, column=col)
                         setcol4.value = thisitem.shift_c
                         colorfill = PatternFill(start_color=thisitem.jobrouting_id.colour,
                                                 end_color=thisitem.jobrouting_id.colour, fill_type='solid')
-
                         setcol4.fill = colorfill
                         # Setting value of comment if WELDER is Overloaded in Shift C
                         if thisitem.jobrouting_id.name == 'WELDING':
@@ -549,7 +586,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         # END of Setting value of comment if Gouging is Overloaded in Shift C
 
             row = row + 2
-        ## End of Section to generate Plan portion of the sheet
+        # End of Section to generate Plan portion of the sheet
 
         # Start of Generation of Actual portion of sheet
         wb.active = 0
@@ -557,7 +594,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         # Generating Actual Portion
 
         itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
-        itemheader_ids = itemheader_obj.search([(1, '=', 1)])
+        itemheader_ids = itemheader_obj.search(['&', ('plan_date', '>=', self.from_dt), ('item_status', '!=', True)])
         row = 27
         for thisitems_id in itemheader_ids:
             # Thse are already set while writing Plan portion. Row 15 is merged with Row 14 so write not possible

@@ -34,7 +34,7 @@
   <field name="name">FinishFet Plan List</field>
   <field name="model">finishfetplanmodule.itemplanheadertable</field>
   <field name="arch" type="xml">
-    <tree decoration-danger="item_status==True ," decoration-success="item_status==False">
+    <tree decoration-success="item_status==False" decoration-danger="item_status==True" >
         <field name="name"/>
          <field name="wo_srno"/>
         <field name="plan_date"/>
@@ -80,6 +80,21 @@
         </p>
     </field>
 </record>
+      <record id="excel_form_view_emp_details" model="ir.ui.view">
+			<field name="name">view.empreport</field>
+			<field name="model">view.empreport</field>
+			<field name="arch" type="xml">
+				<form string="popup">
+					<sheet>
+						<group col="4" colspan="2">
+							<field name="name"/>
+							<field name="datas_fname" filename="file_name"/>
+							<field name="file_name" invisible="1"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
 
 <act_window
 id="FinishFetPlanModule_ItemPlanHeaderTable_action"
@@ -98,3 +113,4 @@ res_model="finishfetplanmodule.itemplanheadertable" />
 <!-- parent="FinishFetPlanModule_mainmenu"-->
 <!-- sequence="5"/>-->
 </odoo>
+
