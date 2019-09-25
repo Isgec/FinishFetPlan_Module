@@ -44,192 +44,192 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
         reportname = "Items : " + self.name
         # self.name = 'Finish Fet Plan Report as on: ' + str(self.plan_date)
 
-        # Start of Section to generate load portion of sheet
-        wb.active = 0
-        worksheet = wb.active
-        itemheader_obj = self.env['finishfetplanmodule.manpowertable']
-        item_ids = itemheader_obj.search([(1, '=', 1)])
-        for thisitem in item_ids:
-            if thisitem.jobrouting_id.name == 'WELDING':
-                welding_shift_a = thisitem.shift_a
-                welding_shift_b = thisitem.shift_b
-                welding_shift_c = thisitem.shift_c
-            if thisitem.jobrouting_id.name == 'GRINDING':
-                grinding_shift_a = thisitem.shift_a
-                grinding_shift_b = thisitem.shift_b
-                grinding_shift_c = thisitem.shift_c
-            if thisitem.jobrouting_id.name == 'Gouging':
-                gouging_shift_a = thisitem.shift_a
-                gouging_shift_b = thisitem.shift_b
-                gouging_shift_c = thisitem.shift_c
-
-        itemheader_obj = self.env['finishfetplanmodule.itemplantable']
-        item_ids = itemheader_obj.search([('date', '>=', self.plan_date)])
-
-        for thisitem in item_ids:
-            if thisitem.date >= self.plan_date:
-                datediff = (thisitem.date - self.plan_date)
-                col = ((datediff.days + 1) * 3) + 1
-                dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
-                setdate = worksheet.cell(row=11, column=col)
-                setdate.value = dateStr
-                if thisitem.jobrouting_id.name == 'WELDING':
-                    row = 14
-                    if thisitem.shift_a > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = welding_shift_a
-                        setcol2 = worksheet.cell(row=row, column=col)
-                        if setcol2.value:
-                            setcol2.value = setcol2.value + thisitem.shift_a or ''
-                            # Setting value of comment if WELDER is Overloaded in Shift A
-                            if welding_shift_a < setcol2.value:
-                                commWELDING[col] = Comment(
-                                    'Overloaded: Out of ' + str(welding_shift_a) + ' WELDER in Shift A loaded ' + str(
-                                        setcol2.value), 'System')
-                            # END of : Setting value of comment if WELDER is Overloaded in Shift A
-                        else:
-                            setcol2.value = thisitem.shift_a or ''
-                    col = col + 1
-
-                    if thisitem.shift_b > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = welding_shift_b
-                        setcol3 = worksheet.cell(row=row, column=col)
-                        if setcol3.value:
-                            setcol3.value = setcol3.value + thisitem.shift_b or ''
-                            # Setting value of comment if WELDER is Overloaded in Shift B
-                            if welding_shift_b < setcol3.value:
-                                commWELDING[col] = Comment(
-                                    'Overloaded: Out of ' + str(welding_shift_b) + ' WELDER in Shift B loaded ' + str(
-                                        setcol3.value), 'System')
-                            # END of : Setting value of comment if WELDER is Overloaded in Shift B
-
-                        else:
-                            setcol3.value = thisitem.shift_b or ''
-                    col = col + 1
-
-                    if thisitem.shift_c > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = welding_shift_c
-                        setcol4 = worksheet.cell(row=row, column=col)
-                        if setcol4.value:
-                            setcol4.value = setcol4.value + thisitem.shift_c
-                            # Setting value of comment if WELDER is Overloaded in Shift C
-                            if welding_shift_c < setcol4.value:
-                                commWELDING[col] = Comment(
-                                    'Overloaded: Out of ' + str(welding_shift_c) + ' WELDER in Shift C loaded ' + str(
-                                        setcol4.value), 'System')
-                            # END of : Setting value of comment if WELDER is Overloaded in Shift A
-
-                        else:
-                            setcol4.value = thisitem.shift_c
-
-                if thisitem.jobrouting_id.name == 'GRINDING':
-                    row = 17
-                    if thisitem.shift_a > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = grinding_shift_a
-                        setcol2 = worksheet.cell(row=row, column=col)
-                        if setcol2.value:
-                            setcol2.value = setcol2.value + thisitem.shift_a or ''
-                            # Setting value of comment if GRINDING is Overloaded in Shift A
-                            if grinding_shift_a < setcol2.value:
-                                commGRINDING[col] = Comment(
-                                    'Overloaded: Out of ' + str(
-                                        grinding_shift_a) + ' GRINDING in Shift A loaded ' + str(
-                                        setcol2.value), 'System')
-                            # END of : Setting value of comment if WELDER is Overloaded in Shift A
-                        else:
-                            setcol2.value = thisitem.shift_a or ''
-                    col = col + 1
-
-                    if thisitem.shift_b > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = grinding_shift_b
-                        setcol3 = worksheet.cell(row=row, column=col)
-                        if setcol3.value:
-                            setcol3.value = setcol3.value + thisitem.shift_b or ''
-                            # Setting value of comment if GRINDING is Overloaded in Shift B
-                            if grinding_shift_b < setcol3.value:
-                                commGRINDING[col] = Comment(
-                                    'Overloaded: Out of ' + str(
-                                        grinding_shift_b) + ' GRINDING in Shift B loaded ' + str(
-                                        setcol3.value), 'System')
-                            # END of : Setting value of comment if GRINDING is Overloaded in Shift B
-                        else:
-                            setcol3.value = thisitem.shift_b or ''
-                    col = col + 1
-
-                    if thisitem.shift_c > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = grinding_shift_c
-                        setcol4 = worksheet.cell(row=row, column=col)
-                        if setcol4.value:
-                            setcol4.value = setcol4.value + thisitem.shift_c
-                            # Setting value of comment if GRINDING is Overloaded in Shift C
-                            if grinding_shift_c < setcol4.value:
-                                commGRINDING[col] = Comment(
-                                    'Overloaded: Out of ' + str(
-                                        grinding_shift_c) + ' GRINDING in Shift C loaded ' + str(
-                                        setcol4.value), 'System')
-                            # END of : Setting value of comment if GRINDING is Overloaded in Shift C
-
-                        else:
-                            setcol4.value = thisitem.shift_c
-
-                if thisitem.jobrouting_id.name == 'Gouging':
-                    row = 20
-                    if thisitem.shift_a > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = gouging_shift_a
-                        setcol2 = worksheet.cell(row=row, column=col)
-                        if setcol2.value:
-                            setcol2.value = setcol2.value + thisitem.shift_a or ''
-                            # Setting value of comment if Gouging is Overloaded in Shift A
-                            if gouging_shift_a < setcol2.value:
-                                commGOUGING[col] = Comment(
-                                    'Overloaded: Out of ' + str(
-                                        gouging_shift_a) + ' Gouging in Shift A loaded ' + str(
-                                        setcol2.value), 'System')
-                            # END of : Setting value of comment if Gouging is Overloaded in Shift A
-                        else:
-                            setcol2.value = thisitem.shift_a or ''
-                    col = col + 1
-
-                    if thisitem.shift_b > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = gouging_shift_b
-                        setcol3 = worksheet.cell(row=row, column=col)
-                        if setcol3.value:
-                            setcol3.value = setcol3.value + thisitem.shift_b or ''
-                            # Setting value of comment if Gouging is Overloaded in Shift B
-                            if gouging_shift_b < setcol3.value:
-                                commGOUGING[col] = Comment(
-                                    'Overloaded: Out of ' + str(
-                                        gouging_shift_b) + ' Gouging in Shift B loaded ' + str(
-                                        setcol3.value), 'System')
-                            # END of : Setting value of comment if Gouging is Overloaded in Shift B
-                        else:
-                            setcol3.value = thisitem.shift_b or ''
-                    col = col + 1
-
-                    if thisitem.shift_c > 0:
-                        setcol = worksheet.cell(row=row - 1, column=col)
-                        setcol.value = gouging_shift_c
-                        setcol4 = worksheet.cell(row=row, column=col)
-                        if setcol4.value:
-                            setcol4.value = setcol4.value + thisitem.shift_c
-                            # Setting value of comment if Gouging is Overloaded in Shift C
-                            if gouging_shift_c < setcol4.value:
-                                commGOUGING[col] = Comment(
-                                    'Overloaded: Out of ' + str(
-                                        gouging_shift_c) + ' Gouging in Shift C loaded ' + str(
-                                        setcol4.value), 'System')
-                            # END of : Setting value of comment if Gouging is Overloaded in Shift C
-                        else:
-                            setcol4.value = thisitem.shift_c
-
-        ## End of Generation of Load portion of sheet
+        #  For Individual Item Load is  Section is not Required
+        # wb.active = 0
+        # worksheet = wb.active
+        # itemheader_obj = self.env['finishfetplanmodule.manpowertable']
+        # item_ids = itemheader_obj.search([(1, '=', 1)])
+        # for thisitem in item_ids:
+        #     if thisitem.jobrouting_id.name == 'WELDING':
+        #         welding_shift_a = thisitem.shift_a
+        #         welding_shift_b = thisitem.shift_b
+        #         welding_shift_c = thisitem.shift_c
+        #     if thisitem.jobrouting_id.name == 'GRINDING':
+        #         grinding_shift_a = thisitem.shift_a
+        #         grinding_shift_b = thisitem.shift_b
+        #         grinding_shift_c = thisitem.shift_c
+        #     if thisitem.jobrouting_id.name == 'Gouging':
+        #         gouging_shift_a = thisitem.shift_a
+        #         gouging_shift_b = thisitem.shift_b
+        #         gouging_shift_c = thisitem.shift_c
+        #
+        # itemheader_obj = self.env['finishfetplanmodule.itemplantable']
+        # item_ids = itemheader_obj.search([('date', '>=', self.plan_date)])
+        #
+        # for thisitem in item_ids:
+        #     if thisitem.date >= self.plan_date:
+        #         datediff = (thisitem.date - self.plan_date)
+        #         col = ((datediff.days + 1) * 3) + 1
+        #         dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
+        #         setdate = worksheet.cell(row=11, column=col)
+        #         setdate.value = dateStr
+        #         if thisitem.jobrouting_id.name == 'WELDING':
+        #             row = 14
+        #             if thisitem.shift_a > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = welding_shift_a
+        #                 setcol2 = worksheet.cell(row=row, column=col)
+        #                 if setcol2.value:
+        #                     setcol2.value = setcol2.value + thisitem.shift_a or ''
+        #                     # Setting value of comment if WELDER is Overloaded in Shift A
+        #                     if welding_shift_a < setcol2.value:
+        #                         commWELDING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(welding_shift_a) + ' WELDER in Shift A loaded ' + str(
+        #                                 setcol2.value), 'System')
+        #                     # END of : Setting value of comment if WELDER is Overloaded in Shift A
+        #                 else:
+        #                     setcol2.value = thisitem.shift_a or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_b > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = welding_shift_b
+        #                 setcol3 = worksheet.cell(row=row, column=col)
+        #                 if setcol3.value:
+        #                     setcol3.value = setcol3.value + thisitem.shift_b or ''
+        #                     # Setting value of comment if WELDER is Overloaded in Shift B
+        #                     if welding_shift_b < setcol3.value:
+        #                         commWELDING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(welding_shift_b) + ' WELDER in Shift B loaded ' + str(
+        #                                 setcol3.value), 'System')
+        #                     # END of : Setting value of comment if WELDER is Overloaded in Shift B
+        #
+        #                 else:
+        #                     setcol3.value = thisitem.shift_b or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_c > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = welding_shift_c
+        #                 setcol4 = worksheet.cell(row=row, column=col)
+        #                 if setcol4.value:
+        #                     setcol4.value = setcol4.value + thisitem.shift_c
+        #                     # Setting value of comment if WELDER is Overloaded in Shift C
+        #                     if welding_shift_c < setcol4.value:
+        #                         commWELDING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(welding_shift_c) + ' WELDER in Shift C loaded ' + str(
+        #                                 setcol4.value), 'System')
+        #                     # END of : Setting value of comment if WELDER is Overloaded in Shift A
+        #
+        #                 else:
+        #                     setcol4.value = thisitem.shift_c
+        #
+        #         if thisitem.jobrouting_id.name == 'GRINDING':
+        #             row = 17
+        #             if thisitem.shift_a > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = grinding_shift_a
+        #                 setcol2 = worksheet.cell(row=row, column=col)
+        #                 if setcol2.value:
+        #                     setcol2.value = setcol2.value + thisitem.shift_a or ''
+        #                     # Setting value of comment if GRINDING is Overloaded in Shift A
+        #                     if grinding_shift_a < setcol2.value:
+        #                         commGRINDING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(
+        #                                 grinding_shift_a) + ' GRINDING in Shift A loaded ' + str(
+        #                                 setcol2.value), 'System')
+        #                     # END of : Setting value of comment if WELDER is Overloaded in Shift A
+        #                 else:
+        #                     setcol2.value = thisitem.shift_a or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_b > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = grinding_shift_b
+        #                 setcol3 = worksheet.cell(row=row, column=col)
+        #                 if setcol3.value:
+        #                     setcol3.value = setcol3.value + thisitem.shift_b or ''
+        #                     # Setting value of comment if GRINDING is Overloaded in Shift B
+        #                     if grinding_shift_b < setcol3.value:
+        #                         commGRINDING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(
+        #                                 grinding_shift_b) + ' GRINDING in Shift B loaded ' + str(
+        #                                 setcol3.value), 'System')
+        #                     # END of : Setting value of comment if GRINDING is Overloaded in Shift B
+        #                 else:
+        #                     setcol3.value = thisitem.shift_b or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_c > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = grinding_shift_c
+        #                 setcol4 = worksheet.cell(row=row, column=col)
+        #                 if setcol4.value:
+        #                     setcol4.value = setcol4.value + thisitem.shift_c
+        #                     # Setting value of comment if GRINDING is Overloaded in Shift C
+        #                     if grinding_shift_c < setcol4.value:
+        #                         commGRINDING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(
+        #                                 grinding_shift_c) + ' GRINDING in Shift C loaded ' + str(
+        #                                 setcol4.value), 'System')
+        #                     # END of : Setting value of comment if GRINDING is Overloaded in Shift C
+        #
+        #                 else:
+        #                     setcol4.value = thisitem.shift_c
+        #
+        #         if thisitem.jobrouting_id.name == 'Gouging':
+        #             row = 20
+        #             if thisitem.shift_a > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = gouging_shift_a
+        #                 setcol2 = worksheet.cell(row=row, column=col)
+        #                 if setcol2.value:
+        #                     setcol2.value = setcol2.value + thisitem.shift_a or ''
+        #                     # Setting value of comment if Gouging is Overloaded in Shift A
+        #                     if gouging_shift_a < setcol2.value:
+        #                         commGOUGING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(
+        #                                 gouging_shift_a) + ' Gouging in Shift A loaded ' + str(
+        #                                 setcol2.value), 'System')
+        #                     # END of : Setting value of comment if Gouging is Overloaded in Shift A
+        #                 else:
+        #                     setcol2.value = thisitem.shift_a or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_b > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = gouging_shift_b
+        #                 setcol3 = worksheet.cell(row=row, column=col)
+        #                 if setcol3.value:
+        #                     setcol3.value = setcol3.value + thisitem.shift_b or ''
+        #                     # Setting value of comment if Gouging is Overloaded in Shift B
+        #                     if gouging_shift_b < setcol3.value:
+        #                         commGOUGING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(
+        #                                 gouging_shift_b) + ' Gouging in Shift B loaded ' + str(
+        #                                 setcol3.value), 'System')
+        #                     # END of : Setting value of comment if Gouging is Overloaded in Shift B
+        #                 else:
+        #                     setcol3.value = thisitem.shift_b or ''
+        #             col = col + 1
+        #
+        #             if thisitem.shift_c > 0:
+        #                 setcol = worksheet.cell(row=row - 1, column=col)
+        #                 setcol.value = gouging_shift_c
+        #                 setcol4 = worksheet.cell(row=row, column=col)
+        #                 if setcol4.value:
+        #                     setcol4.value = setcol4.value + thisitem.shift_c
+        #                     # Setting value of comment if Gouging is Overloaded in Shift C
+        #                     if gouging_shift_c < setcol4.value:
+        #                         commGOUGING[col] = Comment(
+        #                             'Overloaded: Out of ' + str(
+        #                                 gouging_shift_c) + ' Gouging in Shift C loaded ' + str(
+        #                                 setcol4.value), 'System')
+        #                     # END of : Setting value of comment if Gouging is Overloaded in Shift C
+        #                 else:
+        #                     setcol4.value = thisitem.shift_c
+        #
+        # ## End of Generation of Load portion of sheet
         # Start of Section to Generate Plan portion of the sheet
         itemheader_obj = self.env['finishfetplanmodule.itemplanheadertable']
         itemheader_ids = itemheader_obj.search(
