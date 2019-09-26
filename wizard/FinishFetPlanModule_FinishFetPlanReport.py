@@ -84,19 +84,19 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                              'shift_c_c': '',
                              'bg_color_cell': bgColor})
 
-
-                else:
-                    if getcol.value is not None:
-                        getcolor = worksheet.cell(row=itempos, column=i)
-                        bgColor = str(getcolor.fill)[139:147]
-                        thisheader_ids.itemplan_id.create(
-                            {'itemplanheader_id': thisheader_ids.id,
-                             'date': getdt,
-                             'name': 'Added TextValue in A',
-                             'shift_a_c': getcol.value,
-                             'shift_b_c': '',
-                             'shift_c_c': '',
-                             'bg_color_cell': bgColor})
+                # Commeting out Text Read portion as it is taking tooo long
+                # else:
+                #     if getcol.value is not None:
+                #         getcolor = worksheet.cell(row=itempos, column=i)
+                #         bgColor = str(getcolor.fill)[139:147]
+                #         thisheader_ids.itemplan_id.create(
+                #             {'itemplanheader_id': thisheader_ids.id,
+                #              'date': getdt,
+                #              'name': 'Added TextValue in A',
+                #              'shift_a_c': getcol.value,
+                #              'shift_b_c': '',
+                #              'shift_c_c': '',
+                #              'bg_color_cell': bgColor})
 
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
@@ -119,18 +119,19 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                              'shift_b_c': getcol.value,
                              'shift_c_c': '',
                              'bg_color_cell': bgColor})
-                else:
-                    if getcol.value is not None:
-                        getcolor = worksheet.cell(row=itempos, column=i + 1)
-                        bgColor = str(getcolor.fill)[139:147]
-                        thisheader_ids.itemplan_id.create(
-                            {'itemplanheader_id': thisheader_ids.id,
-                             'date': getdt,
-                             'name': 'Added TextValue in B',
-                             'shift_a_c': '',
-                             'shift_b_c': getcol.value,
-                             'shift_c_c': '',
-                             'bg_color_cell': bgColor})
+                # Commeting out Text Read portion as it is taking tooo long
+                # else:
+                #     if getcol.value is not None:
+                #         getcolor = worksheet.cell(row=itempos, column=i + 1)
+                #         bgColor = str(getcolor.fill)[139:147]
+                #         thisheader_ids.itemplan_id.create(
+                #             {'itemplanheader_id': thisheader_ids.id,
+                #              'date': getdt,
+                #              'name': 'Added TextValue in B',
+                #              'shift_a_c': '',
+                #              'shift_b_c': getcol.value,
+                #              'shift_c_c': '',
+                #              'bg_color_cell': bgColor})
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i + 2)
@@ -152,18 +153,19 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                              'shift_b_c': '',
                              'shift_c_c': getcol.value,
                              'bg_color_cell': bgColor})
-                else:
-                    if getcol.value is not None:
-                        getcolor = worksheet.cell(row=itempos, column=i + 2)
-                        bgColor = str(getcolor.fill)[139:147]
-                        thisheader_ids.itemplan_id.create(
-                            {'itemplanheader_id': thisheader_ids.id,
-                             'date': getdt,
-                             'name': 'Added TextValue in C',
-                             'shift_a_c': '',
-                             'shift_b_c': '',
-                             'shift_c_c': getcol.value,
-                             'bg_color_cell': bgColor})
+                # Commeting out Text Read portion as it is taking tooo long
+                # else:
+                #     if getcol.value is not None:
+                #         getcolor = worksheet.cell(row=itempos, column=i + 2)
+                #         bgColor = str(getcolor.fill)[139:147]
+                #         thisheader_ids.itemplan_id.create(
+                #             {'itemplanheader_id': thisheader_ids.id,
+                #              'date': getdt,
+                #              'name': 'Added TextValue in C',
+                #              'shift_a_c': '',
+                #              'shift_b_c': '',
+                #              'shift_c_c': getcol.value,
+                #              'bg_color_cell': bgColor})
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
@@ -207,14 +209,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'shift_a_c': getcol.value,
                          'shift_b_c': '',
                          'shift_c_c': ''})
-                else:
-                    thisheader_ids.actualitemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id,
-                         'date': getdt,
-                         'name': 'Added TextValue in A',
-                         'shift_a_c': getcol.value,
-                         'shift_b_c': '',
-                         'shift_c_c': ''})
+                # Commeting out Text Read portion as it is taking tooo long
+                # else:
+                #     thisheader_ids.actualitemplan_id.create(
+                #         {'itemplanheader_id': thisheader_ids.id,
+                #          'date': getdt,
+                #          'name': 'Added TextValue in A',
+                #          'shift_a_c': getcol.value,
+                #          'shift_b_c': '',
+                #          'shift_c_c': ''})
 
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
@@ -233,14 +236,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'shift_a_c': '',
                          'shift_b_c': getcol.value,
                          'shift_c_c': ''})
-                else:
-                    thisheader_ids.actualitemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id,
-                         'date': getdt,
-                         'name': 'Added TextValue in B',
-                         'shift_a_c': '',
-                         'shift_b_c': getcol.value,
-                         'shift_c_c': ''})
+                # Commeting out Text Read portion as it is taking tooo long
+                # else:
+                #     thisheader_ids.actualitemplan_id.create(
+                #         {'itemplanheader_id': thisheader_ids.id,
+                #          'date': getdt,
+                #          'name': 'Added TextValue in B',
+                #          'shift_a_c': '',
+                #          'shift_b_c': getcol.value,
+                #          'shift_c_c': ''})
 
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
@@ -259,14 +263,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'shift_a_c': '',
                          'shift_b_c': '',
                          'shift_c_c': getcol.value})
-                else:
-                    thisheader_ids.actualitemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id,
-                         'date': getdt,
-                         'name': 'Added C text value',
-                         'shift_a_c': '',
-                         'shift_b_c': '',
-                         'shift_c_c': getcol.value})
+                # Commeting out Text Read portion as it is taking tooo long
+                # else:
+                #     thisheader_ids.actualitemplan_id.create(
+                #         {'itemplanheader_id': thisheader_ids.id,
+                #          'date': getdt,
+                #          'name': 'Added C text value',
+                #          'shift_a_c': '',
+                #          'shift_b_c': '',
+                #          'shift_c_c': getcol.value})
 
                 relativedate = relativedate + 1
             itempos = itempos + 2
@@ -491,15 +496,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     dateStr = str(thisitem.date.day) + "/" + str(thisitem.date.month)
                     setdate = worksheet.cell(row=24, column=col)
                     setdate.value = dateStr
-
-                    # for  String  Value Shift A
-                    if thisitem.shift_a_c != '':
-                        setcol2 = worksheet.cell(row=row, column=col)
-                        setcol2.value = thisitem.shift_a_c or ''
-                        if str(thisitem.bg_color_cell)[0:2] == 'FF':
-                            colorfill = PatternFill(start_color=thisitem.bg_color_cell,
-                                                    end_color=thisitem.bg_color_cell, fill_type='solid')
-                            setcol2.fill = colorfill
+                    # # Commeting out Text Read portion as it is taking tooo long
+                    # # for  String  Value Shift A
+                    # if thisitem.shift_a_c != '':
+                    #     setcol2 = worksheet.cell(row=row, column=col)
+                    #     setcol2.value = thisitem.shift_a_c or ''
+                    #     if str(thisitem.bg_color_cell)[0:2] == 'FF':
+                    #         colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                    #                                 end_color=thisitem.bg_color_cell, fill_type='solid')
+                    #         setcol2.fill = colorfill
 
                     # for  Decimal or Number  Value Shift A
                     if thisitem.shift_a > 0 and thisitem.jobrouting_id:
@@ -527,16 +532,16 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         # END of Setting value of comment if Gouging is Overloaded in Shift A
 
                     col = col + 1
-
-                    # for  String  Value Shift B
-                    if thisitem.shift_b_c != '':
-                        setcol3 = worksheet.cell(row=row, column=col)
-                        setcol3.value = thisitem.shift_b_c or ''
-
-                        if str(thisitem.bg_color_cell)[0:2] == 'FF':
-                            colorfill = PatternFill(start_color=thisitem.bg_color_cell,
-                                                    end_color=thisitem.bg_color_cell, fill_type='solid')
-                            setcol3.fill = colorfill
+                    # # Commeting out Text Read portion as it is taking tooo long
+                    # # for  String  Value Shift B
+                    # if thisitem.shift_b_c != '':
+                    #     setcol3 = worksheet.cell(row=row, column=col)
+                    #     setcol3.value = thisitem.shift_b_c or ''
+                    #
+                    #     if str(thisitem.bg_color_cell)[0:2] == 'FF':
+                    #         colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                    #                                 end_color=thisitem.bg_color_cell, fill_type='solid')
+                    #         setcol3.fill = colorfill
                     # for  Decimal or Number  Value Shift B
                     if thisitem.shift_b > 0 and thisitem.jobrouting_id:
                         setcol3 = worksheet.cell(row=row, column=col)
@@ -563,15 +568,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                         # END of Setting value of comment if Gouging is Overloaded in Shift B
 
                     col = col + 1
-
-                    # for  String  Value Shift C
-                    if thisitem.shift_c_c != '':
-                        setcol4 = worksheet.cell(row=row, column=col)
-                        setcol4.value = thisitem.shift_c_c or ''
-                        if str(thisitem.bg_color_cell)[0:2] == 'FF':
-                            colorfill = PatternFill(start_color=thisitem.bg_color_cell,
-                                                    end_color=thisitem.bg_color_cell, fill_type='solid')
-                            setcol4.fill = colorfill
+                    # # Commeting out Text Read portion as it is taking tooo long
+                    # # for  String  Value Shift C
+                    # if thisitem.shift_c_c != '':
+                    #     setcol4 = worksheet.cell(row=row, column=col)
+                    #     setcol4.value = thisitem.shift_c_c or ''
+                    #     if str(thisitem.bg_color_cell)[0:2] == 'FF':
+                    #         colorfill = PatternFill(start_color=thisitem.bg_color_cell,
+                    #                                 end_color=thisitem.bg_color_cell, fill_type='solid')
+                    #         setcol4.fill = colorfill
 
                     # for  Decimal or Number  Value Shift C
                     if thisitem.shift_c > 0 and thisitem.jobrouting_id:
@@ -624,12 +629,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     setdate = worksheet.cell(row=24, column=col)
                     setdate.value = dateStr
 
-                    # for  String  Value Shift A
-                    if thisitem.shift_a_c != '':
-                        setcol2 = worksheet.cell(row=row, column=col)
-                        setcol2.value = thisitem.shift_a_c or ''
-                    # for  Decimal or Number  Value Shift A
-
+                    # # Commeting out Text Read portion as it is taking tooo long
+                    # # for  String  Value Shift A
+                    # if thisitem.shift_a_c != '':
+                    #     setcol2 = worksheet.cell(row=row, column=col)
+                    #     setcol2.value = thisitem.shift_a_c or ''
+                    # # for  Decimal or Number  Value Shift A
+                    #
                     if thisitem.shift_a > 0:
                         setcol2 = worksheet.cell(row=row, column=col)
                         setcol2.value = thisitem.shift_a or ''
@@ -638,11 +644,12 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                         setcol2.fill = colorfill
                     col = col + 1
-                    # for  String  Value Shift B
-                    if thisitem.shift_b_c != '':
-                        setcol3 = worksheet.cell(row=row, column=col)
-                        setcol3.value = thisitem.shift_b_c or ''
-
+                    # # Commeting out Text Read portion as it is taking tooo long
+                    # # for  String  Value Shift B
+                    # if thisitem.shift_b_c != '':
+                    #     setcol3 = worksheet.cell(row=row, column=col)
+                    #     setcol3.value = thisitem.shift_b_c or ''
+                    #
                     # for  Decimal or Number  Value Shift B
                     if thisitem.shift_b > 0:
                         setcol3 = worksheet.cell(row=row, column=col)
@@ -652,11 +659,12 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                         setcol3.fill = colorfill
                     col = col + 1
-                    # for  String  Value Shift C
-                    if thisitem.shift_c_c != '':
-                        setcol4 = worksheet.cell(row=row, column=col)
-                        setcol4.value = thisitem.shift_c_c or ''
-
+                    # # Commeting out Text Read portion as it is taking tooo long
+                    # # for  String  Value Shift C
+                    # if thisitem.shift_c_c != '':
+                    #     setcol4 = worksheet.cell(row=row, column=col)
+                    #     setcol4.value = thisitem.shift_c_c or ''
+                    #
                     # for  Decimal or Number  Value Shift C
                     if thisitem.shift_c > 0:
                         setcol4 = worksheet.cell(row=row, column=col)
