@@ -40,17 +40,22 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         itempos = 26
         relativedate = 0
         my_max_col = 120
+        # Delete record from Table directly for performance reasons
+        from_dt = str(self.from_dt)
+        sql = "delete from finishfetplanmodule_itemplantable where date >='%s';" %from_dt
+        self.env.cr.execute(sql)
+
         for thisheader_ids in header_ids:
             self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
             my_max_col = 120
 
-            for thisitems_ids in thisheader_ids.itemplan_id:
-                if thisitems_ids.date >= self.from_dt:
-                    jobroutingid = thisitems_ids.jobrouting_id.id
-                    plandate = thisitems_ids.date
-                    # self.readfromexcel = self.readfromexcel + ', Unlinked->' + str(thisitems_ids.date)
-                    thisitems_ids.unlink()  # Delete Record  from Item table With particular
+            # for thisitems_ids in thisheader_ids.itemplan_id:
+            #     if thisitems_ids.date >= self.from_dt:
+            #         jobroutingid = thisitems_ids.jobrouting_id.id
+            #         plandate = thisitems_ids.date
+            #         # self.readfromexcel = self.readfromexcel + ', Unlinked->' + str(thisitems_ids.date)
+            #         thisitems_ids.unlink()  # Delete Record  from Item table With particular
 
             for i in range(4, my_max_col + 1, 3):
                 # Reading for Shift A
@@ -170,15 +175,20 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         itempos = 27
         relativedate = 0
         my_max_col = 120
+        # Delete record from Table directly for performance reasons
+        from_dt = str(self.from_dt)
+        sql = "delete from finishfetplanmodule_actualitemplantable where date >='%s';" %from_dt
+        self.env.cr.execute(sql)
+
         for thisheader_ids in header_ids:
             # self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
             my_max_col = 120
-            for thisitems_ids in thisheader_ids.actualitemplan_id:
-                if thisitems_ids.date >= self.from_dt:
-                    jobroutingid = thisitems_ids.jobrouting_id.id
-                    plandate = thisitems_ids.date
-                    thisitems_ids.unlink()  # Delete Record  from Item table With particular
+            #for thisitems_ids in thisheader_ids.actualitemplan_id:
+                # if thisitems_ids.date >= self.from_dt:
+                #     jobroutingid = thisitems_ids.jobrouting_id.id
+                #     plandate = thisitems_ids.date
+                #     thisitems_ids.unlink()  # Delete Record  from Item table With particular
 
             for i in range(4, my_max_col + 1, 3):
                 # Reading for Shift A
