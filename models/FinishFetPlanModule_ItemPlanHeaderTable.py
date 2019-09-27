@@ -36,7 +36,7 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
         commGRINDING = [None] * 200
         commGOUGING = [None] * 200
         commWELDING = [None] * 200
-        src = path.realpath("/home/rajeev/myaddons/FinishFetPlan_Module/wizard/FinishFetplan.xlsx")
+        src = path.dirname(path.realpath(__file__)) +"/../wizard/FinishFetplan.xlsx")
         wb = openpyxl.load_workbook(src)
         wb.active = 0
         worksheet = wb.active
