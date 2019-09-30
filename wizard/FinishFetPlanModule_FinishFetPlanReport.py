@@ -1,3 +1,5 @@
+from venv import create
+
 from odoo import models, fields
 import io
 import base64
@@ -32,17 +34,37 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         wb = openpyxl.load_workbook(excel_fileobj, data_only=True)
         wb.active = 0
         worksheet = wb.active
+        self.readfromexcel = ''
+
+        # itempos = 26
+        # maxmimum_row = 200
+
+        #  start Create item Header
+        # for i in range(26, maxmimum_row + 1, 2):
+        #     header_obj = self.env['finishfetplanmodule.itemplanheadertable']
+        #     self.ensure_one()
+        #     items_name = worksheet.cell(row=i, column=1)
+        #     work_order = worksheet.cell(row=i, column=2)
+        #     if items_name.value is not None:
+        #         header_obj.create(
+        #             {'name': str(items_name.value), 'wo_srno': str(work_order.value), 'plan_date': '2019/08/01',
+        #              'item_status': False,
+        #              'row_position': i,
+        #              'remarks': ''})
+        #  End Create item Header
+
 
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
         self.readfromexcel = 'Start'
         self.remarks = 'AAA'
         itempos = 26
+
         relativedate = 0
         my_max_col = 120
         # Delete record from Table directly for performance reasons
         from_dt = str(self.from_dt)
-        sql = "delete from finishfetplanmodule_itemplantable where date >='%s';" %from_dt
+        sql = "delete from finishfetplanmodule_itemplantable where date >='%s';" % from_dt
         self.env.cr.execute(sql)
 
         for thisheader_ids in header_ids:
@@ -62,8 +84,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i)
-                getcolor = worksheet.cell(row=itempos, column=i)
-                bgColor = str(getcolor.fill)[139:147]
+
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift A:' + str(getcol.fill) + '} '
@@ -74,6 +95,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 if setrouting_id:
                     if getcol.value is not None:
                         getcolor = worksheet.cell(row=itempos, column=i)
+                        add_work_order = worksheet.cell(row=itempos, column=2)
                         bgColor = str(getcolor.fill)[139:147]
                         thisheader_ids.itemplan_id.create(
                             {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
@@ -82,7 +104,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                              'shift_a_c': getcol.value,
                              'shift_b_c': '',
                              'shift_c_c': '',
-                             'bg_color_cell': bgColor})
+                             'bg_color_cell': bgColor,
+                             'item_wo_srno': add_work_order.value})
 
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
@@ -101,6 +124,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i + 1)
+                add_work_order = worksheet.cell(row=itempos, column=2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 # self.readfromexcel = self.readfromexcel + ' {Reading Cell Shift B:' + str(getcol.fill)[139:147]+ '} '
@@ -109,7 +133,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     setrouting_id = thisjob.id
                 if setrouting_id:
                     if getcol.value is not None:
-                        getcolor = worksheet.cell(row=itempos, column= i + 1)
+                        getcolor = worksheet.cell(row=itempos, column=i + 1)
                         bgColor = str(getcolor.fill)[139:147]
                         thisheader_ids.itemplan_id.create(
                             {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
@@ -118,7 +142,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                              'shift_a_c': '',
                              'shift_b_c': getcol.value,
                              'shift_c_c': '',
-                             'bg_color_cell': bgColor})
+                             'bg_color_cell': bgColor,
+                             'item_wo_srno': add_work_order.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     if getcol.value is not None:
@@ -134,6 +159,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 #              'bg_color_cell': bgColor})
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
+                add_work_order = worksheet.cell(row=itempos, column=2)
                 getcol = worksheet.cell(row=itempos, column=i + 2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
@@ -152,7 +178,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                              'shift_a_c': '',
                              'shift_b_c': '',
                              'shift_c_c': getcol.value,
-                             'bg_color_cell': bgColor})
+                             'bg_color_cell': bgColor,
+                             'item_wo_srno': add_work_order.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     if getcol.value is not None:
@@ -179,18 +206,18 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         my_max_col = 120
         # Delete record from Table directly for performance reasons
         from_dt = str(self.from_dt)
-        sql = "delete from finishfetplanmodule_actualitemplantable where date >='%s';" %from_dt
+        sql = "delete from finishfetplanmodule_actualitemplantable where date >='%s';" % from_dt
         self.env.cr.execute(sql)
 
         for thisheader_ids in header_ids:
             # self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
             my_max_col = 120
-            #for thisitems_ids in thisheader_ids.actualitemplan_id:
-                # if thisitems_ids.date >= self.from_dt:
-                #     jobroutingid = thisitems_ids.jobrouting_id.id
-                #     plandate = thisitems_ids.date
-                #     thisitems_ids.unlink()  # Delete Record  from Item table With particular
+            # for thisitems_ids in thisheader_ids.actualitemplan_id:
+            # if thisitems_ids.date >= self.from_dt:
+            #     jobroutingid = thisitems_ids.jobrouting_id.id
+            #     plandate = thisitems_ids.date
+            #     thisitems_ids.unlink()  # Delete Record  from Item table With particular
 
             for i in range(4, my_max_col + 1, 3):
                 # Reading for Shift A
@@ -276,7 +303,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 relativedate = relativedate + 1
             itempos = itempos + 2
         self.button_excel(data, context=None)
-        self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future reference'
+        self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future ' 'reference '
 
     def button_excel(self, data, context=None):
         fillGRINDING = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
@@ -313,7 +340,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 gouging_shift_c = thisitem.shift_c
 
         itemheader_obj = self.env['finishfetplanmodule.itemplantable']
-        item_ids = itemheader_obj.search([('date', '>=', self.from_dt)])
+        item_ids = itemheader_obj.search(['&', ('date', '>=', self.from_dt), ('items_status', '=', False)])
 
         for thisitem in item_ids:
             if thisitem.date >= self.from_dt:
@@ -681,3 +708,4 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         out = base64.encodestring(fp.getvalue())
         self.download_file = out
         self.report_flag = 1
+

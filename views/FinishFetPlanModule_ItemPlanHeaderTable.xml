@@ -16,8 +16,12 @@
                        <field name="plan_date"/>
                         <button name="rescheduledate" string="Reschedule Plan" type="object" class="oe_highlight"  />
                    </group>
-                    <group col="2">
+                    <group col="4">
                     <field name="item_status" />
+                    <field name="row_position" />
+                    </group>
+                    <group col="2">
+                    <field name="remarks" />
                     </group>
 
                    <br/>   <br/>  <field name="itemplan_id"/>
@@ -34,11 +38,12 @@
   <field name="name">FinishFet Plan List</field>
   <field name="model">finishfetplanmodule.itemplanheadertable</field>
   <field name="arch" type="xml">
-    <tree decoration-success="item_status==False" decoration-danger="item_status==True" >
+    <tree decoration-success="item_status==False" decoration-danger="item_status==True" limit="5000" >
         <field name="name"/>
          <field name="wo_srno"/>
         <field name="plan_date"/>
         <field name="item_status"/>
+        <field name="row_position"/>
     </tree>
     </field>
 </record>
