@@ -21,6 +21,8 @@ class FinishFetPlanModuleActualItemPlanTable(models.Model):
     error_log_b = fields.Char('Error Log B', readonly=True)
     error_log_c = fields.Char('Error Log C', readonly=True)
     lag_days = fields.Integer('Lag Days', compute='default_date', store=True)
+    actual_status = fields.Boolean(string="Deactivated")
+    item_wo_sr_no = fields.Char('W.O/ SNo. ', required=True)
 
     @api.depends('date')
     def default_date(self):

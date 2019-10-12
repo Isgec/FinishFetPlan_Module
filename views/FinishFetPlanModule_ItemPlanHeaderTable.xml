@@ -43,7 +43,7 @@
          <field name="wo_srno"/>
         <field name="plan_date"/>
         <field name="item_status"/>
-        <field name="row_position"/>
+<!--        <field name="row_position"/>-->
     </tree>
     </field>
 </record>

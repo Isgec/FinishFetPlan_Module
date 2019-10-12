@@ -11,13 +11,36 @@ from openpyxl.comments import Comment
 
 class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
     _name = 'finishfetplanmodule.itemplanheadertable'
-
+    # _rec_name = 'id'
     itemplan_id = fields.One2many('finishfetplanmodule.itemplantable', 'itemplanheader_id')
     actualitemplan_id = fields.One2many('finishfetplanmodule.actualitemplantable', 'itemplanheader_id')
     name = fields.Char('Item ', required=True)
     wo_srno = fields.Char('W.O/ SNo. ', required=True)
     plan_date = fields.Date('Plan Date ', required=True)
     item_status = fields.Boolean(string="Deactivated")
+    remarks = fields.Text('Remarks')
+    row_position = fields.Integer('Row Postion')
+
+    @api.onchange('item_status')
+    def set_status(self):
+        if self.item_status is True:
+            sql = "update finishfetplanmodule_itemplantable set items_status = "'True'" where item_wo_srno = '" + str(
+                self.wo_srno) + "'"
+            self.env.cr.execute(sql)
+            sql1 = "update finishfetplanmodule_actualitemplantable set actual_status = "'True'" where item_wo_sr_no = '" + str(
+                self.wo_srno) + "'"
+            self.env.cr.execute(sql1)
+
+        elif self.item_status is False:
+            sql = "update finishfetplanmodule_itemplantable set items_status = "'False '" where item_wo_srno = '" + str(
+                self.wo_srno) + "'"
+            self.env.cr.execute(sql)
+            sql1 = "update finishfetplanmodule_actualitemplantable set actual_status = "'False '" where item_wo_sr_no = '" + str(
+                self.wo_srno) + "'"
+            self.env.cr.execute(sql1)
+
+        # for thisitems in self:
+            # self.remarks = self.remarks + '{ Id : ' + str(thisitems.itemplan_id.ids) + '} '
 
     def rescheduledate(self, data, context=None):
         for record in self.itemplan_id:
@@ -36,7 +59,7 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
         commGRINDING = [None] * 200
         commGOUGING = [None] * 200
         commWELDING = [None] * 200
-        src = path.dirname(path.realpath(__file__)) +"/../wizard/FinishFetplan.xlsx")
+        src = path.dirname(path.realpath(__file__)) + "/../wizard/FinishFetplan.xlsx"
         wb = openpyxl.load_workbook(src)
         wb.active = 0
         worksheet = wb.active
@@ -447,3 +470,4 @@ class FinishFetPlanModuleItemPlanHeaderTable(models.Model):
         name = fields.Char('Report Name', size=256)
         file_name = fields.Char('File Name', size=256)
         datas_fname = fields.Binary('Report', size=256, default='Download Generated Plan.xlsx')
+

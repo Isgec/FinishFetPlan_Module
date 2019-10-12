@@ -53,7 +53,6 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         #              'remarks': ''})
         #  End Create item Header
 
-
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
         self.readfromexcel = 'Start'
@@ -201,14 +200,13 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         header_obj = self.env['finishfetplanmodule.itemplanheadertable']
         header_ids = header_obj.search([(1, '=', 1)])
         # self.readfromexcel = ''
-        itempos = 27
-        relativedate = 0
-        my_max_col = 120
+
         # Delete record from Table directly for performance reasons
         from_dt = str(self.from_dt)
         sql = "delete from finishfetplanmodule_actualitemplantable where date >='%s';" % from_dt
         self.env.cr.execute(sql)
-
+        row_pos = 27
+        row_position=26
         for thisheader_ids in header_ids:
             # self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
@@ -222,7 +220,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
             for i in range(4, my_max_col + 1, 3):
                 # Reading for Shift A
                 getdt = self.from_dt + timedelta(relativedate)
-                getcol = worksheet.cell(row=itempos, column=i)
+                getcol = worksheet.cell(row=row_pos, column=i)
+                add_work_orders = worksheet.cell(row=row_position, column=2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 setrouting_id = None
@@ -235,7 +234,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'name': 'Added Text in Shift A',
                          'shift_a_c': getcol.value,
                          'shift_b_c': '',
-                         'shift_c_c': ''})
+                         'shift_c_c': '',
+                         'item_wo_sr_no': add_work_orders.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     thisheader_ids.actualitemplan_id.create(
@@ -249,6 +249,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i + 1)
+                add_work_orders = worksheet.cell(row=row_position, column=2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 setrouting_id = None
@@ -262,7 +263,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'name': 'Added Shift B',
                          'shift_a_c': '',
                          'shift_b_c': getcol.value,
-                         'shift_c_c': ''})
+                         'shift_c_c': '',
+                         'item_wo_sr_no': add_work_orders.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     thisheader_ids.actualitemplan_id.create(
@@ -276,6 +278,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
                 getcol = worksheet.cell(row=itempos, column=i + 2)
+                add_work_orders = worksheet.cell(row=row_position, column=2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 setrouting_id = None
@@ -289,7 +292,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                          'name': 'Added Shift C',
                          'shift_a_c': '',
                          'shift_b_c': '',
-                         'shift_c_c': getcol.value})
+                         'shift_c_c': getcol.value,
+                         'item_wo_sr_no': add_work_orders.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     thisheader_ids.actualitemplan_id.create(
@@ -300,8 +304,9 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 #          'shift_b_c': '',
                 #          'shift_c_c': getcol.value})
 
-                relativedate = relativedate + 1
-            itempos = itempos + 2
+                    relativedate = relativedate + 1
+            row_pos = row_pos + 2
+            row_position = row_position + 2
         self.button_excel(data, context=None)
         self.readfromexcel = 'Step 5: You may review the Impact on Load and Re-plan or SAVE and data for future ' 'reference '
 
@@ -708,4 +713,3 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         out = base64.encodestring(fp.getvalue())
         self.download_file = out
         self.report_flag = 1
-
