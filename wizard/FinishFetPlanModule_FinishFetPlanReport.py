@@ -206,7 +206,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
         sql = "delete from finishfetplanmodule_actualitemplantable where date >='%s';" % from_dt
         self.env.cr.execute(sql)
         row_pos = 27
-        row_position=26
+        row_position = 26
         for thisheader_ids in header_ids:
             # self.readfromexcel = self.readfromexcel + '{ Items : ' + thisheader_ids.name + '}'
             relativedate = 0
@@ -286,16 +286,15 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     setrouting_id = thisjob.id
                 if setrouting_id:
                     # add record  for Shift C
-                    if getcolor.value is not None:
+                    thisheader_ids.actualitemplan_id.create(
+                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
+                         'date': getdt,
+                         'name': 'Added Shift C',
+                         'shift_a_c': '',
+                         'shift_b_c': '',
+                         'shift_c_c': getcol.value,
+                         'item_wo_sr_no': add_work_orders.value})
 
-                        thisheader_ids.actualitemplan_id.create(
-                            {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
-                             'date': getdt,
-                             'name': 'Added Shift C',
-                             'shift_a_c': '',
-                             'shift_b_c': '',
-                             'shift_c_c': getcol.value,
-                             'item_wo_sr_no': add_work_orders.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     thisheader_ids.actualitemplan_id.create(
