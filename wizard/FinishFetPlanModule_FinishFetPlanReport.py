@@ -248,7 +248,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 # Reading for Shift B
                 getdt = self.from_dt + timedelta(relativedate)
-                getcol = worksheet.cell(row=itempos, column=i + 1)
+                getcol = worksheet.cell(row=row_pos, column=i + 1)
                 add_work_orders = worksheet.cell(row=row_position, column=2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
@@ -277,8 +277,8 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
 
                 # Reading for Shift C
                 getdt = self.from_dt + timedelta(relativedate)
-                getcol = worksheet.cell(row=itempos, column=i + 2)
                 add_work_orders = worksheet.cell(row=row_position, column=2)
+                getcol = worksheet.cell(row=row_pos, column=i + 2)
                 jobrouting_obj = self.env['finishfetplanmodule.jobroutingtable']
                 jobrouting_id = jobrouting_obj.search([('colour', '=', str(getcol.fill)[139:147])])
                 setrouting_id = None
@@ -286,14 +286,16 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                     setrouting_id = thisjob.id
                 if setrouting_id:
                     # add record  for Shift C
-                    thisheader_ids.actualitemplan_id.create(
-                        {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
-                         'date': getdt,
-                         'name': 'Added Shift C',
-                         'shift_a_c': '',
-                         'shift_b_c': '',
-                         'shift_c_c': getcol.value,
-                         'item_wo_sr_no': add_work_orders.value})
+                    if getcolor.value is not None:
+
+                        thisheader_ids.actualitemplan_id.create(
+                            {'itemplanheader_id': thisheader_ids.id, 'jobrouting_id': setrouting_id,
+                             'date': getdt,
+                             'name': 'Added Shift C',
+                             'shift_a_c': '',
+                             'shift_b_c': '',
+                             'shift_c_c': getcol.value,
+                             'item_wo_sr_no': add_work_orders.value})
                 # Commeting out Text Read portion as it is taking tooo long
                 # else:
                 #     thisheader_ids.actualitemplan_id.create(
