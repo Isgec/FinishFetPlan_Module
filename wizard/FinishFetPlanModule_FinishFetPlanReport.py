@@ -304,7 +304,7 @@ class FinishFetPlanModule_FinishFetPlanReport(models.TransientModel):
                 #          'shift_b_c': '',
                 #          'shift_c_c': getcol.value})
 
-                    relativedate = relativedate + 1
+                relativedate = relativedate + 1
             row_pos = row_pos + 2
             row_position = row_position + 2
         self.button_excel(data, context=None)
